@@ -1,57 +1,48 @@
 <template>
-  <div>
-    <Menubar
-      :model="menus"
-      class="vm-h-[38px] vm-mb-3 vm-p-0 vm-border-0"
-      :pt="{
-        rootList: { class: 'vm-w-full !vm-flex-nowrap' },
-        item: { class: 'vm-w-full vm-h-[38px]' },
-        end:{class:'vm-ml-0'}
-      }"
-    >
-      <template #item="{ item, props, hasSubmenu }" class="vm-w-full">
-        <a
-          v-ripple
-          :class="item.active"
-          @click="selectMenu(item)"
-          :target="item.target"
-          v-bind="props.action"
-        >
-          <span :class="item.icon" />
-          <span class="ml-2">{{ item.label }}</span>
-          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
-        </a>
-      </template>
-      <template #end>
-        <span class="md:vm-hidden vm-block vm-font-thin">{{ menu?.label }}</span>
-      </template>
-    </Menubar>
-    <InputGroup class="vm-h-[38px] vm-mb-3">
-      <InputGroupAddon class="vm-h-[38px] vm-bg-gray-200">
-        <Select
-          v-model="global.filters.status"
-          :options="global.config.statuses"
-          class="vm-border-0 vm-shadow-none vm-text-sm tw-h-[38px] vm-bg-gray-200"
-        />
-      </InputGroupAddon>
-      <InputText class="vm-h-[38px]" placeholder="Search" />
-    </InputGroup>
+
+    <div class=" vm-bg-white  vm-pb-4">
+      <TopMenus />
+      <GlobalSearch />
   </div>
   <div>
-    <Listbox @change="selectList" filter optionLabel="title" v-model="global.memo" :options="global.config.memos"  class="w-full md:w-56" listStyle="max-height:72vh">
-        <template #option="slotProps">
-            <div class="items-center">
-                <div>
-                    <div class="vm-flex vm-justify-between">
-                        <div  class="vm-font-bold vm-text-md" :style="[`color:${global.config.colors?.primary}`,]">{{ slotProps.option.title.slice(0,20) }}</div>
-                        <Badge v-if="slotProps.option?.read == 0" value="Unread" size="small"/>
-                    </div>
-                    <p class="vm-h-[25px] vm-overflow-hidden vm-text-sm" v-html="slotProps.option.content"></p>
-                </div>
+    <div class="w-full vm-relative md:w-56 vm-border vm-shadow-md vm-rounded-md vm-border-[#e2e8f0] vm-p-3 vm-h-[80vh]">
+      <div class="flex items-center p-2 border-b">
+        <input type="checkbox" @change="toggleAll" :checked="selectAll" class="vm-ms-2" />
+      </div>
+      <div v-if="global.memos.length === 0" class="vm-flex vm-justify-center vm-items-center vm-flex-col v-h-[inherit]">
+        <p class="vm-text-xl vm-text-gray-400 vm-font-bold vm-capitalize">No Memo {{ global.filters.status?.toLowerCase() }}</p>
+        <i class="pi pi-folder-open vm-text-8xl vm-text-gray-200"></i>
+      </div>
+      <div v-else class="vm-max-h-[72vh] vm-overflow-auto">
+        <div v-for="memo in global.memos" :v-show="!memoLoading" :key="memo.id" :class="global.memo.id === memo.id?'vm-bg-[var(--prime-highlight-background)]' :''" class="vm-flex vm-items-center vm-justify-between vm-border-b hover:vm-bg-[var(--prime-highlight-focus-background)] vm-cursor-pointer">
+          <div class=" vm-p-2">
+            <input type="checkbox" v-model="global.selectedMenus" :value="memo" class="mr-2" />
+          </div>
+          <div @click="selectList(memo)" class="md:vm-w-[95%]  vm-p-2 vm-ms-2 vm-cursor-pointer">
+            <div class="vm-flex vm-justify-between vm-items-center">
+              <span class="vm-font-bold vm-text-md" :style="{ color: global.config.colors?.primary }">{{ cleanHtml(memo.title).slice(0, 20) }}</span>
+              <span class="vm-font-bold vm-opacity-45 vm-text-xs vm-uppercase" :style="{ color: global.config.colors?.primary }">{{ memo.type }}</span>
+              <Badge v-if="memo.is_read === 0" class="vm-text-white vm-text-xs rounded-full px-2">Unread</Badge>
             </div>
-        </template>
-    </Listbox>
-
+            <p class="h-[25px] overflow-hidden  text-sm" >{{ cleanHtml(memo.content).slice(0, 100) }}</p>
+          </div>
+          <button
+            type="button"
+            class="w-[5%] text-gray-600 hover:text-gray-900"
+            @click="toggle('overlay_menu_', $event, memo)"
+            aria-haspopup="true"
+            aria-controls="overlay_menu_"
+          >
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+        </div>
+        <div  v-if="memoLoading">
+          <MemoLoader v-for="x in 5" class="vm-mb-3" />
+        </div>
+      </div>
+      <Button   class="vm-absolute vm-right-4 vm-bottom-4"size="small" @click="global.compose()" icon="pi pi-pencil" label="Compose New Memo"/>
+    </div>
+    <Menu ref="overlay_menu_" :id="'overlay_menu_'" :model="items" :popup="true" />
   </div>
 </template>
 
@@ -62,11 +53,16 @@ import InputGroupAddon from "primevue/inputgroupaddon";
 import InputText from "primevue/inputtext";
 import Menu from "primevue/menu";
 import Select from "primevue/select";
-
 import Menubar from "primevue/menubar";
 import { useGlobalsStore } from "@/stores/globals";
-import Listbox from "primevue/listbox";
+
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
 import Badge from "primevue/badge";
+import GlobalSearch from "./GlobalSearch.vue";
+import TopMenus from "./TopMenus.vue";
+import Skeleton from "primevue/skeleton";
+import MemoLoader from "./MemoLoader.vue";
 
 export default {
   components: {
@@ -77,68 +73,88 @@ export default {
     Menu,
     Button,
     Menubar,
-    Listbox,
-    Badge
+    IconField,
+    InputIcon,
+    Badge,
+    TopMenus,
+    MemoLoader,
+    GlobalSearch
   },
   data() {
     return {
-      global:useGlobalsStore(),
-      menu:{},
-      menus: [
+      global: useGlobalsStore(),
+      item: {},
+      items: [
         {
-          label: "My Memos",
-          icon: "pi pi-list-check",
-          my_memo:true,
-          active:'menu-active'
-        },
-        {
-          label: "Send to Me",
-          icon: "pi pi-verified",
-          my_memo:false
+          label: "Options",
+          items: [
+            {
+              label: "Edit",
+              icon: "pi pi-pen-to-square",
+              command:()=>{
+                this.global.content_to_show = "editor"
+                this.global.drawer =true;
+              }
+            },
+            {
+              label: "Delete",
+              icon: "pi pi-trash",
+              command:()=>{
+                this.global.memo_option_type = 'delete'
+              }
+            },
+          ],
         },
       ],
+      selectAll: false,
+      memoLoading:false,
     };
   },
-  watch:{
-    'global.filters':{
-      handler:function(newVal){
-          this.global.fetchMembers(this.global.config.getMemosRoute, newVal)
+  watch: {
+    "global.filters": {
+      handler: async function (newVal) {
+        this.memoLoading = true;
+        await this.global.fetchMemos(this.global.config.getMemosRoute, newVal);
+        this.memoLoading = false;
       },
-      deep:true
-    }
-  },
-  created(){
-    this.menu = this.menus[0]
-    this.global.fetchMembers(this.global.config.getMemosRoute, this.global.filters)
-  },
-  methods:{
-    selectMenu(item){
-        this.menus.forEach(item=>{
-            item.active = ''
-        })
-        item.active ='menu-active'
-        this.menu = item
-        this.global.filters.my_memo = item.my_memo
+      deep: true,
     },
-    selectList(data){
-        try{
-
-            data.value.read = 1
-            this.global.content_to_show = 'viewer'
-            this.global.drawer = true
-        }catch(e){
-            
-        }
-    }
-
-  }
+    // "global.memo_option_type":function(newVal){
+    //   if(newVal == 'edit'){
+    //     this.global.drawer =true;
+    //     this.global.memo_option_type = null;
+    //   }
+    // }
+  },
+  
+  created() { 
+   this.global.fetchMemos(this.global.config.getMemosRoute, this.global.filters);
+  },
+  methods: {
+    cleanHtml(text) {
+      return text.replace(/<\/?[^>]+(>|$)/g, "");
+    },
+    toggle(ref, event, item) {
+      this.global.memo = item;
+      this.$refs['overlay_menu_'].toggle(event);
+    },
+    toggleAll(item = null) {
+      if (item == null) {
+        return;
+      }
+      if (this.selectAll) {
+        this.global.selectedMenus = [];
+      } else {
+        this.global.selectedMenus = this.global.memos;
+      }
+      this.selectAll = !this.selectAll;
+    },
+    selectList(data) {
+        this.global.memo = data
+        data.is_read = 1;
+        this.global.content_to_show = "viewer";
+        this.global.drawer = true;
+    },
+  },
 };
 </script>
-
-<style scoped>
-.menu-active{
-    color: v-bind(global.config.colors.primary);
-    border-bottom: 3px solid v-bind(global.config.colors.primary);
-}
-
-</style>

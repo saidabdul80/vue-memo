@@ -3,6 +3,7 @@
 import { useGlobalsStore } from '@/stores/globals'
 import { useNotificationStore } from '@/stores/notification'
 
+
 export const handleError = (err) => {
 
   const notificationStore = useNotificationStore()
@@ -210,9 +211,15 @@ export const showToaster = (msg, t = true) => {
  
 
   const notificationStore = useNotificationStore()
+  if(Array.isArray(msg)){
 
-  notificationStore.showNotification({
-    type: 'error',
-    message: msg,
-  })
+    msg.forEach(m=>showToaster(m))
+  }else if(typeof msg === "object"){
+    Object.keys(msg).forEach(m=>showToaster(msg[m]))
+  }else{
+    notificationStore.showNotification({
+      type: 'error',
+      message: msg,
+    })
+  }
 }

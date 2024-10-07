@@ -35,10 +35,10 @@ function adjustColor({ r, g, b }, percentage) {
 // Function to generate shades
 const generateColorShades = (baseHexColor) => {
   const baseRgb = hexToRgb(baseHexColor);
-
+  const addBlack = (rgb) => adjustColor(rgb, -5); 
   return {
-    50: rgbToHex(...Object.values(adjustColor(baseRgb, 80))), // Lighter by 80%
-    100: rgbToHex(...Object.values(adjustColor(baseRgb, 60))), // Lighter by 60%
+    50: rgbToHex(...Object.values(addBlack(adjustColor(baseRgb, 80)))), // Lighter by 80% then darken by 5%
+    100: rgbToHex(...Object.values(addBlack(adjustColor(baseRgb, 60)))), // Lighter by 60% then darken by 5%
     200: rgbToHex(...Object.values(adjustColor(baseRgb, 40))), // Lighter by 40%
     300: rgbToHex(...Object.values(adjustColor(baseRgb, 20))), // Lighter by 20%
     400: rgbToHex(...Object.values(adjustColor(baseRgb, 10))), // Lighter by 10%
@@ -57,55 +57,18 @@ let config = {
     primary: "#006033",
   },
   token: "",
-  members: [],
-  statuses: [],
-  departments: [],
-  types: [],
-  memos: [
-    {
-      read: 0,
-      title: "Memo Title 1",
-      department: "department",
-      type: "Circular",
-      content:
-        "Interdum iaculis pharetra quam montes vitae volutpat tristique. Lorem ipsum dolor sit amet consectetur. Ultrices quis quis maecenas nunc duis. Cursus turpis maecenas porttitor ph",
-    },
-    {
-      read: 0,
-      title: "Memo Title 2",
-      department: "department",
-      type: "Request",
-      content:
-        "Interdum iaculis pharetra quam montes vitae volutpat tristique. Lorem ipsum dolor sit amet consectetur. Ultrices quis quis maecenas nunc duis. Cursus turpis maecenas porttitor ph",
-    },
-    {
-      read: 0,
-      title: "Memo Title 3",
-      department: "department",
-      type: "Circular",
-      content:
-        "Interdum iaculis pharetra quam montes vitae volutpat tristique. Lorem ipsum dolor sit amet consectetur. Ultrices quis quis maecenas nunc duis. Cursus turpis maecenas porttitor ph",
-    },
-    {
-      read: 0,
-      title: "Memo Title 4",
-      department: "department",
-      type: "Circular",
-      content:
-        "Interdum iaculis pharetra quam montes vitae volutpat tristique. Lorem ipsum dolor sit amet consectetur. Ultrices quis quis maecenas nunc duis. Cursus turpis maecenas porttitor ph",
-    },
-  ],
   primevue: {},
   getMembersRoute: "/memo/members",
+  getBootRoute:"/memo/boot",
   getDepartmentsRoute: "/memo/departments",
   getStatusesRoute: "/memo/statuses",
   getTypesRoute: "/memo/types",
   getMemosRoute: "/memo/all",
-  memosRoute: "/memos",
+  memosRoute: "/memo",
   approveMemoRoute: "/memo/approve",
   rejectMemoRoute: "/memo/reject",
 };
-console.log(generateColorShades(config.colors.primary));
+
 const MyPreset = definePreset(Aura, {
   semantic: {
     primary: generateColorShades(config.colors.primary),

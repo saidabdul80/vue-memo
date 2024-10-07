@@ -10,16 +10,14 @@ const VueMemo = {
         const config = getConfig();
 
         // Optionally initialize PrimeVue with options from the config
-        if (config.primevue.override) {
-            app.use(PrimeVue,app.use(PrimeVue, {
-                theme:config.primevue.theme
-            })
-            );
-        }
+        app.use(PrimeVue, {
+            theme:config.primevue.theme
+        });
+        
         
         app.component('Memo', Memo);
         app.config.globalProperties.$memoglobals = config 
     }
 };
-
+export { Memo };
 export default VueMemo;

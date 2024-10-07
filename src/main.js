@@ -1,7 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import PrimeVue from 'primevue/config';
-import Aura from '@primevue/themes/aura';
 import 'primeicons/primeicons.css'
 import { createPinia } from 'pinia'
 
@@ -11,18 +9,8 @@ import "./assets/main.css"
 import VueMemo from '.';
 const pinia = createPinia()
 
-// app.use(PrimeVue, {
-//     theme: {
-//         preset: Aura,
-//         options: {
-//           prefix: 'prime',
-//           darkModeSelector: 'none',
-//           cssLayer: false
-//         }
-//       }
-// });
 app.use(VueMemo, {
-    
+    token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGEwM2I3NWVhMTNiOTVkMTg4NWE2ZjJlZjJlNjFiOTg4M2E2ODE1YzI2MDlkOGM4ZjNhZGMyYjI4NGViZDAxYjczYmQzN2U2ZDU5YmNlODUiLCJpYXQiOjE3MjgxOTU2OTUuMTc2Mzg4LCJuYmYiOjE3MjgxOTU2OTUuMTc2Mzg5LCJleHAiOjE3Mjg4MDA0OTUuMTczOTQ1LCJzdWIiOiIxIiwic2NvcGVzIjpbImFwaS1zdGFmZiJdfQ.kONpkaf34Z7NnBXSWuoaPjPfXeJ3OGuayLbSUCpCMK7UlRBLv6-PB7Tl5GSThpV6F1jpi6qtGGArY3K_OilnlxX4296krIKNyzFUfVDCKLbzpMxQFyEVbHGlP5eq9MvjIl9GmsKkpiprIPBC2EKMTqYf_-aGMHiHBZH-ESjURETOKlXu5mffjGrdnZdIJbRyY2JsLud2qiJ5h5dGULNcbBXiYw1IEzy_pDTYSl-ay67JoIzcUFEJVEtDSzS0F5tDxkMwWfTsBVGXkFu8EuMNgawU0WHoI04A22xmGnWWzcKUaWAQA70lTWq3aYGQkxP590G2kdGalGwYF-Eh-Py6kmE2RHqIER9A69eiDuPIOCxCKugcrSVRiW8Y00f8ZVIwED69jRV4a7xX8v6KN-K780-KGExe3vBBw1ck6aeFh5-OleuGTh6z_l9cp7BBWlCv1fN-xxDy2VTo8UcSSudHFYbf2dC-mgWB9gBK7xgeHsMsCeiUOaayA82BeXdEhkEv37nI4twFkUqdZXuom1aAlru0XIuDdRNLXFrkYMXHwgUndj7kRko1tnwU_d5NEqN577pkfr8Rke-CU9kdXiI-Paj_UHYFANRJwMpoyj1qecW9btbVzKoSPO2n7UcdXsi4SpBt2OsXie0f-r1mEhTR8OfTNKm4zsJk3YVKK2oe1wE"
 });
 
 app.use(pinia);

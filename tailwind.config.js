@@ -4,6 +4,7 @@ module.exports = {
   content: [
     './*.html',
     './src/**/*.{js,jsx,ts,tsx,vue}',
+    "./node_modules/vue-memo-fe/**/*.{vue,js,ts,jsx,tsx}", 
   ],
   theme: {
     extend: {},

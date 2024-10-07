@@ -1,12 +1,31 @@
 {
-  "name": "vue-memo",
-  "version": "1.0.0",
-  "main": "src/index.js",
-  "private": true,
+  "name": "vue-memo-fe",
+  "version": "1.3.7",
+  "main": "dist/vue-memo.umd.js",
+  "module": "dist/vue-memo.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-memo.es.js",
+      "require": "./dist/vue-memo.umd.js"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    },
+    "./dist/index.css": {
+      "import": "./dist/index.css",
+      "require": "./dist/index.css"
+    }
+  },
+  "description": "A description of your project",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
+    "build:css": "tailwindcss -o dist/index.css --minify",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
@@ -18,7 +37,6 @@
     "primeicons": "^7.0.0",
     "primevue": "^4.0.7",
     "quill": "^2.0.2",
-    "tinycolor2": "^1.6.0",
     "vue": "^3.2.13"
   },
   "devDependencies": {
