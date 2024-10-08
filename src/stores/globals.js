@@ -12,6 +12,8 @@ export const useGlobalsStore = defineStore('memo-globals', {
     members: [],
     statuses: [],
     departments: [],
+    meta:{},
+    links:{},
     types: [],
     buttonLoading:[],
     memos: [
@@ -171,8 +173,8 @@ export const useGlobalsStore = defineStore('memo-globals', {
       
       if(m){
         this.setMemos(m.data)
-        this.next_page_url =  m.meta.next_page_url
-        this.prev_page_url =  m.meta.prev_page_url
+        this.meta =  m.meta
+        this.links =  m.links
       }
     },
     async fetchMembers(path=null, data = {}, fullPath = false){
@@ -192,7 +194,7 @@ export const useGlobalsStore = defineStore('memo-globals', {
       }
     },
     isMyMemo(memo){
-      return this.user?.id == memo?.owner_id && this.user?.user_type == memo?.owner_type
+      return (this.user?.id == memo?.owner_id && this.user?.user_type == memo?.owner_type) || memo?.id == null
     },
     compose(){
       this.content_to_show = 'editor'

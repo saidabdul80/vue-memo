@@ -1,48 +1,83 @@
 <template>
 
-    <div class=" vm-bg-white  vm-pb-4">
+  <div class=" vm-bg-gray-200  vm-pb-4">
       <TopMenus />
       <GlobalSearch />
   </div>
   <div>
-    <div class="w-full vm-relative md:w-56 vm-border vm-shadow-md vm-rounded-md vm-border-[#e2e8f0] vm-p-3 vm-h-[80vh]">
+    <div class="w-full vm-relative vm-pb-4 md:w-56 vm-border vm-shadow-md vm-rounded-b-md vm-border-[#e2e8f0] vm-py-3" :style="'min-height:'+global.config.height">
       <div class="flex items-center p-2 border-b">
         <input type="checkbox" @change="toggleAll" :checked="selectAll" class="vm-ms-2" />
       </div>
-      <div v-if="global.memos.length === 0" class="vm-flex vm-justify-center vm-items-center vm-flex-col v-h-[inherit]">
-        <p class="vm-text-xl vm-text-gray-400 vm-font-bold vm-capitalize">No Memo {{ global.filters.status?.toLowerCase() }}</p>
-        <i class="pi pi-folder-open vm-text-8xl vm-text-gray-200"></i>
+      
+      <div v-if="global.memos.length === 0" class="vm-flex vm-justify-center vm-items-center vm-flex-col vm-h-[inherit]">
+        
+        <p class="vm-text-2xl vm-text-gray-400 vm-mt-20 vm-font-bold vm-capitalize">No Memo {{ global.filters.status?.toLowerCase() }}</p>
+        <PhFolderOpen class=" vm-text-8xl vm-text-gray-200"/>
       </div>
-      <div v-else class="vm-max-h-[72vh] vm-overflow-auto">
-        <div v-for="memo in global.memos" :v-show="!memoLoading" :key="memo.id" :class="global.memo.id === memo.id?'vm-bg-[var(--prime-highlight-background)]' :''" class="vm-flex vm-items-center vm-justify-between vm-border-b hover:vm-bg-[var(--prime-highlight-focus-background)] vm-cursor-pointer">
-          <div class=" vm-p-2">
+      <div v-else class="vm-overflow-auto vm-w-full " ref="containerDiv" :style="'max-height:'+ (parseInt(global.config.height)-3)+'vh'" >
+      
+        <div  v-if="!memoLoading" class="vm-pb-[6rem] md:vm-pb-0">
+        <div v-for="memo in global.memos"  
+            :key="memo.id" :class="global.memo.id === memo.id?'vm-bg-[var(--prime-highlight-background)]' :''" 
+            class="vm-flex sm:vm-w-full vm-w-[86%] vm-items-center last:vm-border-b-0 vm-justify-between vm-border-b hover:vm-bg-[var(--prime-highlight-focus-background)] vm-cursor-pointer">
+          <div class="vm-p-2">
             <input type="checkbox" v-model="global.selectedMenus" :value="memo" class="mr-2" />
           </div>
-          <div @click="selectList(memo)" class="md:vm-w-[95%]  vm-p-2 vm-ms-2 vm-cursor-pointer">
-            <div class="vm-flex vm-justify-between vm-items-center">
-              <span class="vm-font-bold vm-text-md" :style="{ color: global.config.colors?.primary }">{{ cleanHtml(memo.title).slice(0, 20) }}</span>
-              <span class="vm-font-bold vm-opacity-45 vm-text-xs vm-uppercase" :style="{ color: global.config.colors?.primary }">{{ memo.type }}</span>
+          <div class="vm-flex vm-justify-between vm-w-full" >
+          <div @click="selectList(memo)" :style="'width:'+widespace+'px'" class="vm-p-2 md:vm-ms-2 vm-cursor-pointer">
+            <div class="vm-flex vm-w-full vm-justify-between vm-items-center ">
+              <span class="vm-font-bold vm-text-md vm-truncate" :style="{ color: global.config.colors?.primary }">{{ cleanHtml(memo.title).slice(0, 20) }}</span>
               <Badge v-if="memo.is_read === 0" class="vm-text-white vm-text-xs rounded-full px-2">Unread</Badge>
+              <div>
+              
+              </div>
             </div>
-            <p class="h-[25px] overflow-hidden  text-sm" >{{ cleanHtml(memo.content).slice(0, 100) }}</p>
+            <div class="vm-flex vm-justify-between vm-w-full">
+              <p class="vm-h-[25px] vm-truncate  overflow-hidden md:vm-text-[16px] vm-text-sm vm-w-[85%]" >{{ global.isMdUp? cleanHtml(memo.content).slice(0, 100): cleanHtml(memo.content).slice(0, 100) }}</p>
+            </div>
           </div>
-          <button
-            type="button"
-            class="w-[5%] text-gray-600 hover:text-gray-900"
-            @click="toggle('overlay_menu_', $event, memo)"
-            aria-haspopup="true"
-            aria-controls="overlay_menu_"
-          >
-            <i class="pi pi-ellipsis-v"></i>
-          </button>
+          <div :style="'width:'+smallspace+'px'" class=" vm-items-center vm-flex">
+            <div>
+              <p class="vm-font-bold vm-opacity-45 vm-text-xs vm-uppercase" :style="{ color: global.config.colors?.primary }">{{ memo.type }}</p>
+              <p class="vm-font-bold vm-opacity-90 vm-text-[9px] md:vm-text-xs md:vm-ms-0 vm-ms-2 vm-whitespace-nowrap vm-w-[15%] vm-capitalize" style="flex-basis: max-content;" :style="{ color: global.config.colors?.primary }">{{ memo.time_at }}</p>
+            </div>
+            <button
+              type="button"
+              class=" text-gray-600 vm-pe-2 hover:text-gray-900"
+              @click="toggle('overlay_menu_', $event, memo)"
+              aria-haspopup="true"
+              aria-controls="overlay_menu_"
+            >
+            <PhDotsThreeOutlineVertical weight="fill" />
+            </button>
+
+          </div>
+           </div>
+        </div>
         </div>
         <div  v-if="memoLoading">
           <MemoLoader v-for="x in 5" class="vm-mb-3" />
         </div>
       </div>
-      <Button   class="vm-absolute vm-right-4 vm-bottom-4"size="small" @click="global.compose()" icon="pi pi-pencil" label="Compose New Memo"/>
+      
+      <div class=" vm-absolute vm-bottom-0 md:vm-p-4 vm-p-2 vm-flex vm-flex-col md:vm-flex-row vm-gap-2 vm-items-center vm-justify-between vm-bg-white vm-w-full vm-border-t-2">
+        <Pagination />
+        <Button  size="small" @click="global.compose()" label="Compose New Memo">
+          <template #icon>
+              <PhPencil />
+            </template>
+            </Button>
+      </div>
     </div>
-    <Menu ref="overlay_menu_" :id="'overlay_menu_'" :model="items" :popup="true" />
+    <Menu ref="overlay_menu_" :id="'overlay_menu_'" :model="items" :popup="true" >
+      <template #item="{ item, props }">
+        <a  v-ripple v-bind="props.action">
+            <component :is="item.icon"  />
+            <span class="tvm-ml-2">{{ item.label }}</span>
+        </a>
+    </template>
+      </Menu>
   </div>
 </template>
 
@@ -63,6 +98,8 @@ import GlobalSearch from "./GlobalSearch.vue";
 import TopMenus from "./TopMenus.vue";
 import Skeleton from "primevue/skeleton";
 import MemoLoader from "./MemoLoader.vue";
+import Pagination from "./Pagination.vue";
+import { PhDotsThreeOutlineVertical, PhFolderOpen, PhPencil, PhTrash } from "@phosphor-icons/vue";
 
 export default {
   components: {
@@ -78,7 +115,13 @@ export default {
     Badge,
     TopMenus,
     MemoLoader,
-    GlobalSearch
+    Pagination,
+    GlobalSearch,
+    PhFolderOpen,
+    PhPencil,
+    PhDotsThreeOutlineVertical,
+    PhTrash,
+    PhPencil
   },
   data() {
     return {
@@ -90,7 +133,7 @@ export default {
           items: [
             {
               label: "Edit",
-              icon: "pi pi-pen-to-square",
+              icon: PhPencil,
               command:()=>{
                 this.global.content_to_show = "editor"
                 this.global.drawer =true;
@@ -98,7 +141,7 @@ export default {
             },
             {
               label: "Delete",
-              icon: "pi pi-trash",
+              icon: 'PhTrash',
               command:()=>{
                 this.global.memo_option_type = 'delete'
               }
@@ -126,11 +169,43 @@ export default {
     //   }
     // }
   },
-  
+  computed:{
+    widespace(){
+      console.log(this.global.currentSize)
+      return this.getDivWidthPx(95)
+    },
+    smallspace(){
+      console.log(this.global.currentSize)
+      return this.getDivWidthPx(5)
+    } , 
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.updateScreenSize);
+  },
   created() { 
+    this.updateScreenSize();
+    window.addEventListener("resize", this.updateScreenSize);
    this.global.fetchMemos(this.global.config.getMemosRoute, this.global.filters);
   },
   methods: {
+    updateScreenSize() {
+      this.global.currentSize = window.innerWidth;
+    },
+    getDivWidthPx(percentage) {
+      const div =  this.$refs.containerDiv;
+      if (percentage < 0) percentage = 0;
+      if (percentage > 100) percentage = 100;
+      // Ensure the div exists
+      
+      if (!div) return 0;
+
+      // Get the div's width
+      const divWidth = div.clientWidth;
+      // Calculate the pixel value
+      const pxValue = (percentage / 100) * divWidth;
+
+      return Math.round(pxValue) -100; // Return the rounded pixel value
+    },
     cleanHtml(text) {
       return text.replace(/<\/?[^>]+(>|$)/g, "");
     },
@@ -156,5 +231,10 @@ export default {
         this.global.drawer = true;
     },
   },
+  mounted(){
+    setTimeout(()=>{
+      this.global.currentSize = 5
+    },1000)
+  }
 };
 </script>

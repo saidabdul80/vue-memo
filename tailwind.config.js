@@ -10,6 +10,8 @@ module.exports = {
     extend: {},
     screens: {
       'md': '961px',
+      'sm': '768px',
+      
     },
   },
   important: true,

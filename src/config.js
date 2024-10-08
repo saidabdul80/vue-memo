@@ -57,6 +57,7 @@ let config = {
     primary: "#006033",
   },
   token: "",
+  height:'80vh',
   primevue: {},
   getMembersRoute: "/memo/members",
   getBootRoute:"/memo/boot",
@@ -80,7 +81,7 @@ config.primevue = {
   theme: {
     preset: MyPreset,
     options: {
-      prefix: "prime",
+      prefix: "vm-prime",
       darkModeSelector: "none",
       cssLayer: false,
     },
