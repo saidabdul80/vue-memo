@@ -2,8 +2,7 @@
   <Transition name="slide-up" mode="out-in">
     <div
       v-if="global.content_to_show == 'viewer'"
-      class="vm-h-[80vm] vm-overflow-auto"
-    >
+      class="vm-h-[80vm] vm-overflow-auto">
       <Panel class="vm-border-0">
         <template #header>
           <div v-if="!global.drawer"></div>
@@ -14,11 +13,15 @@
         >
           #{{ global.memo?.type }}
         </span>
+        
         <p class="vm-text-sm vm-capitalize">
           <b>From:</b> {{ global.memo?.owner?.full_name || "Jamiyu Yusuf" }}
         </p>
         <p class="vm-text-sm vm-capitalize vm-mb-2">
           <b>Department:</b> {{ global.memo?.departments.join(",") }}
+        </p>
+        <p class="vm-text-sm vm-capitalize vm-mb-2">
+          <b>Date:</b> {{ global.memo?.updated_at }}
         </p>
       </Panel>
       <Panel>
@@ -29,6 +32,73 @@
         </template>
         <div class="vm-overflow-auto" v-html="global.memo?.content"></div>
       </Panel>
+      <div class="vm-flex vm-gap-5">
+      <p class="vm-text-sm vm-underline vm-cursor-pointer vm-font-bold vm-mt-4 vm-mb-3" @click="view('comment')">
+        <span v-if="show_comment">Hide</span>
+        <span v-else>View</span>
+        Comments
+      </p>
+      <p class="vm-text-sm vm-underline vm-cursor-pointer vm-font-bold vm-mt-4 vm-mb-3" @click="view('log')">
+        <span v-if="show_log">Hide</span>
+        <span v-else>View</span>
+        Logs
+      </p>
+    </div>
+      <!-- <div v-if="!global.isMyMemo(global.memo)">
+        <div v-for="comment in approver.comments" class="vm-mb-3">
+          <div class="vm-flex ">  
+            <p class="vm-text-xs vm-font-bold"><{{ approver.full_name }}></p>
+            <p class="vm-text-xs vm-ms-2">{{ comment.time_at }}</p>
+          </div>
+          <div class="vm-text-sm" v-html="comment.comment"></div>
+        </div>
+      </div> -->
+      
+      <Transition name="slide-up" mode="out-in">
+        <div v-if="show_comment">
+          <div v-for="comment in global.memo.comments" class="vm-mb-5 ">
+        
+              <div v-if="!comment.is_owner" class=" vm-bg-gray-50 vm-p-3">
+                <div class="vm-flex vm-justify-center">  
+                  <p class="vm-text-xs vm-font-bold"><{{ comment.full_name }}></p>
+                  <p class="vm-text-xs vm-ms-2">{{ comment.time_at }}</p>
+                </div>
+                <div class="vm-text-sm" v-html="comment.comment"></div>
+              </div>
+              <div v-else>
+                <div>
+                  <div class="vm-flex vm-items-center vm-text-sm">
+                    <img src="@/assets/reply.png" style="width: 20px; height: 20px;" /> <{{ comment?.updated_at }}>
+                    <span class="vm-text-lg vm-uppercase vm-font-bold">#{{ comment?.type }}</span>
+                  </div>
+                  <p class="vm-text-sm vm-capitalize vm-mb-2">
+                    <b>Department:</b> {{ comment?.departments.join(",") }}
+                  </p>
+                </div>
+                <Panel>
+                  <template #header>
+                    <span class="vm-text-lg vm-uppercase vm-font-bold">{{
+                      comment?.title
+                    }}</span>
+                  </template>
+                  <div class="vm-overflow-auto" v-html="comment?.comment"></div>
+                </Panel>
+              </div>
+            </div>
+        </div>
+      </Transition>
+      <Transition name="slide-up" mode="out-in">
+        <div v-if="show_log">
+          <div v-for="log in global.memo.logs" class="vm-mb-5 ">
+                <div class="vm-flex vm-justify-center">  
+                  <p class="vm-text-xs vm-font-bold"><{{ log.full_name }}></p>
+                  <p class="vm-text-xs vm-ms-2">{{ log.time_at }}</p>
+                </div>
+                <div class="vm-text-sm">Memo Status changed to: <b>{{ log.status }}</b> </div>
+        
+            </div>
+        </div>
+      </Transition>
     </div>
     <div v-else>
       <div class="vm-border-0 vm-pb-[18px]">
@@ -122,11 +192,14 @@
           </template> -->
         </MultiSelect>
       </div>
-
-      <Card class="vm-border vm-border-gray-200 vm-shadow-none" :class="global.nameRules?.content?'vm-border vm-border-[red]':''">
+      
+      <MemoEditor
+        v-model="global.memo.content"
+        :nameRules="global.nameRules"
+      />
+      <!-- <Card class="vm-border vm-border-gray-200 vm-shadow-none" :class="global.nameRules?.content?'vm-border vm-border-[red]':''">
         <template #content>
           <Editor
-             
             class="memoEditor"
             @load="getInstance"
             :key="global.memo?.id"
@@ -150,9 +223,32 @@
             </template>
           </Editor>
         </template>
-      </Card>
+      </Card> -->
     </div>
   </Transition>
+  <Drawer
+      v-model:visible="global.make_comment"
+      :position="global.isMdUp ? 'right' : 'bottom'"
+      @hide="global.content_to_show = 'viewer'"
+      :class="global.isMdUp ? '!vm-w-[60%] !vm-h-full' : ''"
+      style="height: auto"
+    >
+      <template #header>
+          <ButtonGroup>
+            <Button
+              size="small"
+              :loading="buttonLoading"
+              label="Send Comment"
+              @click="sendComment"
+            />
+          </ButtonGroup>
+        </template>
+        <MemoEditor
+          :reply="true"
+          v-model="global.comment"
+          :nameRules="global.nameRules"
+        />
+  </Drawer>
 </template>
 
 <script>
@@ -165,6 +261,10 @@ import Panel from "primevue/panel";
 import Select from "primevue/select";
 import MultiSelect from "primevue/multiselect";
 import Button from "primevue/button";
+import MemoEditor from "./MemoEditor.vue";
+import Drawer from "primevue/drawer";
+import ButtonGroup from "primevue/buttongroup";
+import { PhArrowBendUpLeft } from "@phosphor-icons/vue";
 
 export default {
   components: {
@@ -175,6 +275,11 @@ export default {
     Select,
     MultiSelect,
     Button,
+    MemoEditor,
+    Drawer,
+    Button,
+    ButtonGroup,
+    PhArrowBendUpLeft
   },
   data() {
     return {
@@ -182,9 +287,28 @@ export default {
       searchInput: "",
       isLoading: false,
       editor: null,
+      buttonLoading:false,
+      show_comment:false,
+      show_log:false,
     };
   },
   computed: {
+    approver() {
+      if (
+        this.global &&
+        this.global.memo &&
+        Array.isArray(this.global.memo.approvers) &&
+        this.global.user
+      ) {
+        return this.global.memo.approvers.find(
+          (approver) =>
+            approver.approver_id === this.global.user.id &&
+            approver.approver_type === this.global.user.user_type
+        );
+      } else {
+        return [];
+      }
+    },
     approvers: {
       get() {
         if (!this.global.memo?.approvers) {
@@ -233,6 +357,32 @@ export default {
   },
 
   methods: {
+    view(name){
+      
+      if(name=='comment'){
+        this.show_log = false;
+        this.show_comment = !this.show_comment
+      }
+
+      if(name=='log'){
+        this.show_comment = false;
+        this.show_log = !this.show_log
+      }
+    },
+    async sendComment(){
+      this.buttonLoading = true
+      const response = await useClient().http({
+            method: "post",
+            path: this.global.config.makeCommentRoute,
+            data: { 
+              memo_id: this.global.memo.id,
+              comment: this.global.comment,
+             },
+          });
+      this.buttonLoading = false
+      this.global.make_comment = false
+      this.global.fetchMemos(null, this.global.filters)
+    },
     getInstance(editor) {
       const instance = editor.instance;
       instance.setContents(

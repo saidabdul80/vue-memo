@@ -17,7 +17,7 @@
           :target="item.target"
           v-bind="props.action"
         >
-          <component :is="item.icon" />
+          <component :is="item.icon" size="20px"  />
           <span class="ml-2">{{ item.label }}</span>
           <PhCaretDown v-if="hasSubmenu" class="ml-2" />
         </a>
@@ -77,13 +77,13 @@
             active: "menu-active",
             name: "category",
           },
-          {
-            label: "STARRED",
-            icon: "PhStar",
-            my_memo: true,
-            active: "menu-active",
-            name: "category",
-          },
+        //   {
+        //     label: "STARRED",
+        //     icon: "PhStar",
+        //     my_memo: true,
+        //     active: "menu-active",
+        //     name: "category",
+        //   },
           {
             label: "APPROVED",
             icon: "PhCheckCircle",

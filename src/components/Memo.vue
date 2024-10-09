@@ -36,15 +36,25 @@
           <div v-else>
             <ButtonGroup>
               <Button
+                v-if="!store.isMyMemo(store.memo)"
                 size="small"
                 severity="secondary"
-                @click="store.compose"
-                label="Compose New Memo"
-              >
-            <template #icon>
-              <PhPencil />
-            </template>
-            </Button>
+                @click="store.make_comment = true; store.comment = null"
+                label="Make Comment">
+                <template #icon>
+                  <PhPencil />
+                </template>
+              </Button>
+              <Button
+                v-else
+                size="small"
+                severity="secondary"
+                @click="store.content_to_show = 'editor'"
+                label="Update Memo">
+                <template #icon>
+                  <PhPencil />
+                </template>
+              </Button>
               <Button
                 v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'"
                 :disabled="approver.status == 'APPROVED'"
@@ -114,7 +124,6 @@ export default {
   data() {
     return {
       store: useGlobalsStore(),
-      
       buttonLoading: [],
     };
   },
@@ -195,6 +204,7 @@ export default {
     },
     updateScreenSize() {
       this.store.isMdUp = window.innerWidth >= 961;
+      this.store.currentSize = window.innerWidth;
     },
   },
   beforeDestroy() {

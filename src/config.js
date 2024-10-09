@@ -68,6 +68,7 @@ let config = {
   memosRoute: "/memo",
   approveMemoRoute: "/memo/approve",
   rejectMemoRoute: "/memo/reject",
+  makeCommentRoute:"/memo/make_comment"
 };
 
 const MyPreset = definePreset(Aura, {

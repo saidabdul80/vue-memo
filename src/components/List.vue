@@ -229,6 +229,7 @@ export default {
         data.is_read = 1;
         this.global.content_to_show = "viewer";
         this.global.drawer = true;
+        this.make_comment = false
     },
   },
   mounted(){
