@@ -23,9 +23,12 @@ export const useClient = defineStore("client", () => {
       }
     }
 
-    const headers = {
-      Authorization: token ? `Bearer ${token}` : "",
-    };
+    const headers = {};
+    const withCredentials = useGlobalsStore().config.auth_type === 'session';
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
 
     if (config?.data instanceof FormData) {
       headers['Content-Type'] = 'multipart/form-data';
@@ -36,7 +39,8 @@ export const useClient = defineStore("client", () => {
         url: url,
         data: config?.data,
         headers: headers,
-        responseType: config?.responseType
+        responseType: config?.responseType,
+        withCredentials,
       });
       useGlobalsStore().nameRules = ref({})
       useGlobalsStore().isOnlineStatus =true

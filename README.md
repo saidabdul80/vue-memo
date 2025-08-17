@@ -69,6 +69,7 @@ The `VueMemo` plugin accepts a configuration object with the following options:
 | ----------------------- | -------- | -------- | ------------------------------------- | --------------------------------------------------------------------------- |
 | `token`                 | `String` | Yes      | `null`                                | The authentication token for API requests.                                  |
 | `baseUrl`               | `String` | Yes      | `null`                                | The base URL for the backend API.                                           |
+| `auth_type`             | `String` | No       | `'token'`                             | The authentication type. Can be `'token'` or `'session'`.                   |
 | `colors`                | `Object` | No       | `{ primary: '#007bff' }`              | An object to customize the theme colors. Currently supports `primary`.      |
 | `height`                | `String` | No       | `'80vh'`                              | The minimum height of the memo list container.                              |
 | `primevue`              | `Object` | No       | `null`                                | Custom PrimeVue theme configuration. See [PrimeVue docs](https://primevue.org/theming/). |
