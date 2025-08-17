@@ -8,6 +8,7 @@ export const useGlobalsStore = defineStore('memo-globals', {
     content_to_show:'viewer',
     drawer:false,
     config: {
+      getBootRoute:'/boot'
     },
     members: [],
     statuses: [],
@@ -190,8 +191,30 @@ export const useGlobalsStore = defineStore('memo-globals', {
         this.setMembers(m)
       }
     },
+    async deleteMemo(id) {
+      const res = await useClient().http({
+        method: "delete",
+        path: `${this.config.memosRoute}/${id}`,
+      });
+      return res;
+    },
+    async updateComment(id, comment) {
+      const res = await useClient().http({
+        method: "put",
+        path: `${this.config.updateCommentRoute}/${id}`,
+        data: { comment },
+      });
+      return res;
+    },
+    async deleteComment(id) {
+      const res = await useClient().http({
+        method: "delete",
+        path: `${this.config.deleteCommentRoute}/${id}`,
+      });
+      return res;
+    },
     async boot(){
-      console.log(this.config.getBootRoute)
+
       const m = await useClient().http({ method: 'get', path:this.config.getBootRoute});
       if(m){
         this.user = m.user

@@ -9,12 +9,12 @@
       </select>
     </div> -->
     <div class="vm-text-sm vm-text-gray-700">
-      {{ global.meta?.from }} - {{ global.meta?.to }} of {{ global.meta.total }}
+      {{ meta?.from }} - {{meta?.to }} of {{ meta.total }}
       <Button
         rounded="sm"
         outlined
-        :disabled="global.links?.prev == null"
-        @click="changePage(global.links?.prev)"
+        :disabled="links?.prev == null"
+        @click="changePage(links?.prev)"
         size="small"
         class="!vm-rounded-md !vm-h-[30px] !vm-w-[30px] !vm-border-gray-400 vm-me-2"
       >
@@ -26,8 +26,8 @@
       <Button
         rounded="sm"
         outlined
-        :disabled="global.links?.next == null"
-        @click="changePage(global.links?.next)"
+        :disabled="links?.next == null"
+        @click="changePage(links?.next)"
         size="small"
         class="!vm-rounded-md !vm-h-[30px] !vm-w-[30px] !vm-border-gray-400 vm-p-0"
       >

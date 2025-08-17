@@ -104,12 +104,6 @@ import NotificationRoot from "./notifications/NotificationRoot.vue";
 import { useClient } from "@/stores/client";
 
 export default {
-  props: {
-    user: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   components: {
     Content,
     Drawer,
@@ -133,8 +127,6 @@ export default {
     this.updateScreenSize();
     window.addEventListener("resize", this.updateScreenSize);
     this.store.boot();
-    this.store.fetchData();
-    this.store.fetchMembers();
   },
   watch: {
     config: {
@@ -151,12 +143,12 @@ export default {
         this.store &&
         this.store.memo &&
         Array.isArray(this.store.memo.approvers) &&
-        this.store.user
+        this.store.bootload?.user
       ) {
         return this.store.memo.approvers.find(
           (approver) =>
-            approver.approver_id === this.store.user.id &&
-            approver.approver_type === this.store.user.user_type
+            approver.approver_id === this.store.bootload.user.id &&
+            approver.approver_type === this.store.bootload.user.user_type
         );
       } else {
         return [];

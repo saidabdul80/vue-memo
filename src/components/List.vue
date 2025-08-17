@@ -1,13 +1,18 @@
 <template>
 
-  <div class=" vm-bg-gray-200  vm-pb-4">
+  <div class=" vm-bg-gray-50  vm-pb-4">
       <TopMenus />
       <GlobalSearch />
   </div>
   <div>
     <div class="w-full vm-relative vm-pb-4 md:w-56 vm-border vm-shadow-md vm-rounded-b-md vm-border-[#e2e8f0] vm-py-3" :style="'min-height:'+global.config.height">
-      <div class="flex items-center p-2 border-b">
-        <input type="checkbox" @change="toggleAll" :checked="selectAll" class="vm-ms-2" />
+      <div class="vm-flex vm-items-center vm-mb-3 p-2 border-b">
+        <input type="checkbox" @change="toggleAll" :checked="selectAll" class="vm-ms-2 vm-me-3" />
+        <Select v-model="global.filters.status" :pt="{label:{class:'vm-text-xs vm-p-1'}}" :options="['ALL','APPROVED', 'REJECTED']" class="vm-h-[25px] vm-text-xs">
+          <template #dropdownicon>
+            <PhFunnel />
+          </template>
+        </Select>
       </div>
       
       <div v-if="global.memos.length === 0" class="vm-flex vm-justify-center vm-items-center vm-flex-col vm-h-[inherit]">
@@ -27,7 +32,17 @@
           <div class="vm-flex vm-justify-between vm-w-full" >
           <div @click="selectList(memo)" :style="'width:'+widespace+'px'" class="vm-p-2 md:vm-ms-2 vm-cursor-pointer">
             <div class="vm-flex vm-w-full vm-justify-between vm-items-center ">
-              <span class="vm-font-bold vm-text-md vm-truncate" :style="{ color: global.config.colors?.primary }">{{ cleanHtml(memo.title).slice(0, 20) }}</span>
+              <div>
+                <!-- <Tag v-if="memo.status == 'APPROVED' && isMdUp" rounded severity="primary" class="vm-ms-2 vm-text-xs rounded-full px-2">
+                  <template #icon><PhCheck /></template>
+                  APPROVED
+                </Tag> -->
+                <span class="vm-font-bold vm-text-md vm-truncate" :style="{ color: global.config.colors?.primary }">{{ cleanHtml(memo.title).slice(0, 20) }}</span>
+                <Tag v-if="memo.status == 'APPROVED' && !global.isMdUp" rounded severity="primary" class="vm-ms-2 vm-text-xs rounded-full px-2">
+                  <template #icon><PhCheck /></template>
+                  APPROVED
+                </Tag>
+              </div>
               <Badge v-if="memo.is_read === 0" class="vm-text-white vm-text-xs rounded-full px-2">Unread</Badge>
               <div>
               
@@ -99,7 +114,8 @@ import TopMenus from "./TopMenus.vue";
 import Skeleton from "primevue/skeleton";
 import MemoLoader from "./MemoLoader.vue";
 import Pagination from "./Pagination.vue";
-import { PhDotsThreeOutlineVertical, PhFolderOpen, PhPencil, PhTrash } from "@phosphor-icons/vue";
+import { PhFunnel, PhDotsThreeOutlineVertical, PhFolderOpen, PhPencil, PhTrash, PhCheck } from "@phosphor-icons/vue";
+import Tag from "primevue/tag";
 
 export default {
   components: {
@@ -121,7 +137,10 @@ export default {
     PhPencil,
     PhDotsThreeOutlineVertical,
     PhTrash,
-    PhPencil
+    PhPencil,
+    PhFunnel,
+    PhCheck,
+    Tag
   },
   data() {
     return {
@@ -142,8 +161,9 @@ export default {
             {
               label: "Delete",
               icon: 'PhTrash',
-              command:()=>{
-                this.global.memo_option_type = 'delete'
+              command: async ()=>{
+                await this.global.deleteMemo(this.global.memo.id);
+                this.global.fetchMemos();
               }
             },
           ],
@@ -162,12 +182,6 @@ export default {
       },
       deep: true,
     },
-    // "global.memo_option_type":function(newVal){
-    //   if(newVal == 'edit'){
-    //     this.global.drawer =true;
-    //     this.global.memo_option_type = null;
-    //   }
-    // }
   },
   computed:{
     widespace(){
@@ -185,7 +199,7 @@ export default {
   created() { 
     this.updateScreenSize();
     window.addEventListener("resize", this.updateScreenSize);
-   this.global.fetchMemos(this.global.config.getMemosRoute, this.global.filters);
+    this.global.fetchMemos(this.global.config.getMemosRoute, this.global.filters);
   },
   methods: {
     updateScreenSize() {

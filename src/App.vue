@@ -14,9 +14,12 @@ export default {
   data() {
     return {
       global:useGlobalsStore()
-    
     }
   },
+  created() {
+    this.global.config = this.$memoglobals;
+    console.log(this.$memoglobals,33);
+  }
 }
 </script>
 

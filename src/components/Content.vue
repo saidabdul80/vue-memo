@@ -44,26 +44,30 @@
         Logs
       </p>
     </div>
-      <!-- <div v-if="!global.isMyMemo(global.memo)">
-        <div v-for="comment in approver.comments" class="vm-mb-3">
-          <div class="vm-flex ">  
-            <p class="vm-text-xs vm-font-bold"><{{ approver.full_name }}></p>
-            <p class="vm-text-xs vm-ms-2">{{ comment.time_at }}</p>
-          </div>
-          <div class="vm-text-sm" v-html="comment.comment"></div>
-        </div>
-      </div> -->
       
       <Transition name="slide-up" mode="out-in">
         <div v-if="show_comment">
           <div v-for="comment in global.memo.comments" class="vm-mb-5 ">
         
               <div v-if="!comment.is_owner" class=" vm-bg-gray-50 vm-p-3">
-                <div class="vm-flex vm-justify-center">  
-                  <p class="vm-text-xs vm-font-bold"><{{ comment.full_name }}></p>
-                  <p class="vm-text-xs vm-ms-2">{{ comment.time_at }}</p>
+                <div class="vm-flex vm-justify-between vm-items-center">
+                  <div class="vm-flex vm-justify-center">  
+                    <p class="vm-text-xs vm-font-bold"><{{ comment.full_name }}></p>
+                    <p class="vm-text-xs vm-ms-2">{{ comment.time_at }}</p>
+                  </div>
+                  <div class="vm-flex vm-gap-2">
+                    <Button v-if="global.user.id === comment.approver_id" @click="editComment(comment)" icon="pi pi-pencil" class="vm-p-button-sm vm-p-button-text" />
+                    <Button v-if="global.user.id === comment.approver_id" @click="deleteComment(comment.id)" icon="pi pi-trash" class="vm-p-button-sm vm-p-button-text vm-p-button-danger" />
+                  </div>
                 </div>
-                <div class="vm-text-sm" v-html="comment.comment"></div>
+                <div v-if="editingCommentId === comment.id">
+                  <Editor v-model="editedCommentContent" editorStyle="height: 100px" />
+                  <div class="vm-flex vm-justify-end vm-gap-2 vm-mt-2">
+                    <Button @click="saveEditedComment(comment)" label="Save" class="vm-p-button-sm" />
+                    <Button @click="cancelEdit" label="Cancel" class="vm-p-button-sm vm-p-button-secondary" />
+                  </div>
+                </div>
+                <div v-else class="vm-text-sm" v-html="comment.comment"></div>
               </div>
               <div v-else>
                 <div>
@@ -264,7 +268,7 @@ import Button from "primevue/button";
 import MemoEditor from "./MemoEditor.vue";
 import Drawer from "primevue/drawer";
 import ButtonGroup from "primevue/buttongroup";
-import { PhArrowBendUpLeft } from "@phosphor-icons/vue";
+import { PhArrowBendUpLeft, PhPencil, PhTrash } from "@phosphor-icons/vue";
 
 export default {
   components: {
@@ -277,9 +281,10 @@ export default {
     Button,
     MemoEditor,
     Drawer,
-    Button,
     ButtonGroup,
-    PhArrowBendUpLeft
+    PhArrowBendUpLeft,
+    PhPencil,
+    PhTrash
   },
   data() {
     return {
@@ -290,6 +295,8 @@ export default {
       buttonLoading:false,
       show_comment:false,
       show_log:false,
+      editingCommentId: null,
+      editedCommentContent: ''
     };
   },
   computed: {
@@ -409,6 +416,24 @@ export default {
         }
       }, 500);
     },
+    editComment(comment) {
+        this.editingCommentId = comment.id;
+        this.editedCommentContent = comment.comment;
+    },
+    async saveEditedComment(comment) {
+        await this.global.updateComment(comment.id, this.editedCommentContent);
+        this.editingCommentId = null;
+        this.editedCommentContent = '';
+        this.global.fetchMemos(null, this.global.filters);
+    },
+    cancelEdit() {
+        this.editingCommentId = null;
+        this.editedCommentContent = '';
+    },
+    async deleteComment(commentId) {
+        await this.global.deleteComment(commentId);
+        this.global.fetchMemos(null, this.global.filters);
+    }
   },
 };
 </script>

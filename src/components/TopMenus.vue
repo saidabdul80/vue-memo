@@ -34,6 +34,28 @@
   import { PhFolder, PhTray, PhPaperPlaneRight, PhStar, PhCaretDown, PhCheckCircle, PhXCircle } from "@phosphor-icons/vue";
   
   export default {
+    props: {
+      menus: {
+        type: Array,
+        default: () => [
+          {
+            label: "All",
+            icon: "PhFolder",
+            name: "category",
+          },
+          {
+            label: "INBOX",
+            icon: "PhTray",
+            name: "category",
+          },
+          {
+            label: "SENT",
+            icon: "PhPaperPlaneRight",
+            name: "category",
+          },
+        ],
+      },
+    },
     components: {
       Menubar,
       PhFolder,
@@ -53,61 +75,8 @@
     created() {
       this.menu = this.menus[0];
     },
-    computed: {
-      menus() {
-        const predefinedMenus = [
-          {
-            label: "All",
-            icon: "PhFolder",
-            my_memo: true,
-            active: "menu-active",
-            name: "category",
-          },
-          {
-            label: "INBOX",
-            icon: "PhTray",
-            my_memo: true,
-            active: "menu-active",
-            name: "category",
-          },
-          {
-            label: "SENT",
-            icon: "PhPaperPlaneRight",
-            my_memo: true,
-            active: "menu-active",
-            name: "category",
-          },
-        //   {
-        //     label: "STARRED",
-        //     icon: "PhStar",
-        //     my_memo: true,
-        //     active: "menu-active",
-        //     name: "category",
-        //   },
-          {
-            label: "APPROVED",
-            icon: "PhCheckCircle",
-            my_memo: true,
-            active: "menu-active",
-            name: "status",
-          },
-          {
-            label: "REJECTED",
-            icon: "PhXCircle",
-            my_memo: true,
-            active: "menu-active",
-            name: "status",
-          },
-        ];
-        return predefinedMenus;
-      },
-    },
     methods: {
       selectMenu(item) {
-        this.menus.forEach((menu) => {
-          menu.active = "";
-        });
-        item.active = "menu-active";
         this.menu = item;
         this.global.filters.status = null;
         this.global.filters.category = null;
@@ -119,12 +88,10 @@
   
   <style scoped>
   .menu-active {
-    transform: translateX(40deg);
-    transition: all .5s !important;
-    color: v-bind($memoglobals.colors.primary);
-    border-bottom: 3px solid v-bind($memoglobals.colors.primary) !important;
-    background: #0001;
+    transition: all 0.3s ease-in-out;
+    color: v-bind('global.config.colors.primary');
+    border-bottom: 3px solid v-bind('global.config.colors.primary');
+    background-color: rgba(0, 0, 0, 0.04);
     border-radius: 5px 5px 0 0;
   }
   </style>
-  
