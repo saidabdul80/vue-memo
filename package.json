@@ -1,6 +1,6 @@
 {
   "name": "vue-memo-fe",
-  "version": "1.4.6",
+  "version": "1.4.9",
   "main": "dist/vue-memo.umd.js",
   "module": "dist/vue-memo.es.js",
   "exports": {
