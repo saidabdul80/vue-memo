@@ -2,3 +2,142 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Modern glass-morphism design system */
+@layer base {
+  :root {
+    /* Enhanced color palette with gradients */
+    --memo-primary-color: #3b82f6;
+    --memo-primary-hover: #2563eb;
+    --memo-primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --memo-accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --memo-surface-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    
+    /* Glass-morphism colors */
+    --memo-glass-primary: rgba(255, 255, 255, 0.1);
+    --memo-glass-secondary: rgba(255, 255, 255, 0.05);
+    --memo-glass-border: rgba(255, 255, 255, 0.2);
+    --memo-backdrop-blur: blur(16px);
+    
+    /* Enhanced shadows and glows */
+    --memo-shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --memo-shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+    --memo-shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    /* Modern spacing and typography */
+    --memo-radius-modern: 1rem;
+    --memo-radius-xl: 1.5rem;
+    --memo-transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --memo-transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Background gradients */
+    --memo-bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    --memo-card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --memo-background: #0f172a;
+      --memo-surface: #1e293b;
+      --memo-text-primary: #f1f5f9;
+      --memo-text-secondary: #94a3b8;
+      --memo-border: #334155;
+      --memo-glass-primary: rgba(0, 0, 0, 0.2);
+      --memo-glass-secondary: rgba(0, 0, 0, 0.1);
+      --memo-glass-border: rgba(255, 255, 255, 0.1);
+      --memo-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --memo-card-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--memo-bg-gradient);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Glass-morphism utilities */
+  .glass-card {
+    backdrop-filter: var(--memo-backdrop-blur);
+    background: var(--memo-glass-primary);
+    border: 1px solid var(--memo-glass-border);
+    box-shadow: var(--memo-shadow-glass);
+  }
+
+  .glass-surface {
+    backdrop-filter: var(--memo-backdrop-blur);
+    background: var(--memo-glass-secondary);
+    border: 1px solid var(--memo-glass-border);
+  }
+
+  .glass-hover {
+    transition: var(--memo-transition-smooth);
+  }
+
+  .glass-hover:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--memo-shadow-floating);
+    transform: translateY(-2px);
+  }
+
+  /* Modern button styles */
+  .btn-modern {
+    @apply vm-px-6 vm-py-3 vm-rounded-xl vm-font-semibold vm-transition-all vm-duration-300;
+    @apply vm-shadow-lg hover:vm-shadow-xl vm-transform hover:vm-scale-105;
+    background: var(--memo-primary-gradient);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-glass {
+    @apply vm-backdrop-blur-sm vm-bg-white/10 vm-border vm-border-white/20;
+    @apply vm-text-text-primary hover:vm-bg-white/20 vm-transition-all vm-duration-300;
+  }
+
+  /* Enhanced focus states */
+  .focus-ring {
+    @apply focus:vm-outline-none focus:vm-ring-2 focus:vm-ring-primary/50 focus:vm-ring-offset-2;
+  }
+
+  /* Shimmer animation */
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Floating animation */
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  @keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Pulse glow animation */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse-glow {
+    from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+    to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5); }
+  }
+}

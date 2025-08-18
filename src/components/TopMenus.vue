@@ -1,9 +1,15 @@
 <template>
   <div class="top-menus-container">
-    <div class="tabs">
-      <button v-for="(tab, index) in menus" :key="tab.label" @click="selectMenu(index)" :class="{ 'active': activeIndex === index }">
-        <i :class="tab.icon"></i>
-        <span>{{ tab.label }}</span>
+    <div class="modern-tabs">
+      <button 
+        v-for="(tab, index) in menus" 
+        :key="tab.label" 
+        @click="selectMenu(index)" 
+        :class="['tab-button', { 'active': activeIndex === index }]"
+      >
+        <i :class="tab.icon" class="tab-icon"></i>
+        <span class="tab-label">{{ tab.label }}</span>
+        <div v-if="activeIndex === index" class="tab-indicator"></div>
       </button>
     </div>
   </div>
@@ -55,16 +61,95 @@ export default {
 
 <style scoped>
 .top-menus-container {
-  @apply vm-mb-4;
+  @apply vm-mb-6;
 }
-.tabs {
-  @apply vm-flex vm-border-b;
+
+.modern-tabs {
+  @apply vm-flex vm-relative vm-p-1 vm-rounded-2xl;
+  background: var(--memo-glass-secondary);
+  backdrop-filter: var(--memo-backdrop-blur);
+  border: 1px solid var(--memo-glass-border);
+  box-shadow: var(--memo-shadow-glass);
 }
-.tabs button {
-  @apply vm-flex vm-items-center vm-gap-2 vm-px-4 vm-py-2 vm-text-text-secondary hover:vm-text-text-primary;
+
+.tab-button {
+  @apply vm-relative vm-flex vm-items-center vm-gap-3 vm-px-6 vm-py-3 vm-rounded-xl;
+  @apply vm-text-text-secondary vm-font-medium vm-transition-all vm-duration-300;
+  @apply vm-cursor-pointer vm-backdrop-blur-sm;
+  position: relative;
+  overflow: hidden;
 }
-.tabs button.active {
-  border-bottom:2px solid var(--memo-primary-color) !important;
-  @apply vm-border-b-2 vm-border-primary vm-text-primary;
+
+.tab-button::before {
+  content: '';
+  @apply vm-absolute vm-inset-0 vm-opacity-0 vm-transition-opacity vm-duration-300;
+  background: var(--memo-surface-gradient);
+  backdrop-filter: var(--memo-backdrop-blur);
+}
+
+.tab-button:hover::before {
+  @apply vm-opacity-100;
+}
+
+.tab-button:hover {
+  @apply vm-text-text-primary vm-transform vm-scale-105;
+  box-shadow: var(--memo-shadow-lg);
+}
+
+.tab-button.active {
+  @apply vm-text-primary vm-font-semibold;
+  background: var(--memo-primary-gradient);
+  color: white;
+  box-shadow: var(--memo-shadow-glow);
+}
+
+.tab-button.active::before {
+  @apply vm-opacity-0;
+}
+
+.tab-icon {
+  @apply vm-text-lg vm-transition-transform vm-duration-300;
+  z-index: 1;
+  position: relative;
+}
+
+.tab-button:hover .tab-icon {
+  @apply vm-transform vm-scale-110;
+}
+
+.tab-button.active .tab-icon {
+  @apply vm-drop-shadow-lg;
+}
+
+.tab-label {
+  @apply vm-font-medium vm-transition-all vm-duration-300;
+  z-index: 1;
+  position: relative;
+}
+
+.tab-indicator {
+  @apply vm-absolute vm-bottom-0 vm-left-0 vm-right-0 vm-h-0.5 vm-rounded-full;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tab-button {
+    @apply vm-px-4 vm-py-2;
+  }
+  
+  .tab-label {
+    @apply vm-text-sm;
+  }
+  
+  .modern-tabs {
+    @apply vm-gap-1;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 </style>

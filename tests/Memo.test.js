@@ -11,7 +11,6 @@ vi.mock('../src/stores/client', () => ({
 }))
 
 import { useGlobalsStore } from '../src/stores/globals'
-import PrimeVue from 'primevue/config';
 
 describe('Memo.vue', () => {
   it('renders the component', () => {
@@ -29,7 +28,7 @@ describe('Memo.vue', () => {
 
     const wrapper = mount(Memo, {
       global: {
-        plugins: [pinia, PrimeVue],
+        plugins: [pinia],
         mocks: {
           $memoglobals: store.config
         }
