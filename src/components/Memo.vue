@@ -45,7 +45,6 @@
         </Transition>
       </div>
     </div>
-    
     <NotificationRoot />
   </div>
 </template>
@@ -214,8 +213,6 @@ export default {
 
 .memo-app-container {
   @apply vm-flex vm-h-screen vm-overflow-hidden;
-  background: var(--memo-bg-gradient);
-  backdrop-filter: var(--memo-backdrop-blur);
 }
 
 .list-container {
@@ -223,7 +220,7 @@ export default {
 }
 
 .memo-drawer-overlay {
-  @apply vm-fixed vm-inset-0 vm-bg-black/30 vm-z-40 vm-backdrop-blur-sm;
+  @apply vm-fixed vm-inset-0 vm-z-40 vm-backdrop-blur-sm;
   animation: fadeIn 0.3s ease-out;
 }
 

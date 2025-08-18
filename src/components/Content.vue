@@ -333,7 +333,7 @@ export default {
   @apply vm-text-text-primary vm-transition-all vm-duration-300;
   @apply focus:vm-outline-none focus:vm-ring-2 focus:vm-ring-primary focus:vm-ring-opacity-50;
   background: var(--memo-glass-secondary);
-  border: 1px solid var(--memo-glass-border);
+  border: 1px solid #00000033;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
