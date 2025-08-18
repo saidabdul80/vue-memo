@@ -3,32 +3,288 @@
 @tailwind utilities;
 
 :root {
-  /* Theme Variables */
-  --memo-primary-color: #3b82f6;
-  --memo-primary-hover: #2563eb;
+  /* Modern Color Palette */
+  --memo-primary-color: #6366f1;
+  --memo-primary-hover: #4f46e5;
+  --memo-primary-light: #a5b4fc;
+  --memo-primary-dark: #3730a3;
   --memo-secondary-color: #64748b;
-  --memo-background: #f8fafc;
-  --memo-surface: #ffffff;
-  --memo-border: #e2e8f0;
-  --memo-text-primary: #1e293b;
-  --memo-text-secondary: #64748b;
+  --memo-accent-color: #06b6d4;
+  --memo-accent-hover: #0891b2;
+  
+  /* Gradients */
+  --memo-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --memo-gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --memo-gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --memo-gradient-success: linear-gradient(135deg, #81ffef 0%, #f067b4 100%);
+  --memo-gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --memo-gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+  
+  /* Background & Surface */
+  --memo-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --memo-background-alt: #f8fafc;
+  --memo-surface: rgba(255, 255, 255, 0.95);
+  --memo-surface-glass: rgba(255, 255, 255, 0.85);
+  --memo-surface-hover: rgba(255, 255, 255, 0.98);
+  --memo-surface-dark: #1e293b;
+  
+  /* Border & Dividers */
+  --memo-border: rgba(226, 232, 240, 0.8);
+  --memo-border-light: rgba(255, 255, 255, 0.2);
+  --memo-divider: rgba(148, 163, 184, 0.2);
+  
+  /* Text Colors */
+  --memo-text-primary: #0f172a;
+  --memo-text-secondary: #475569;
+  --memo-text-tertiary: #94a3b8;
+  --memo-text-inverse: #ffffff;
+  --memo-text-accent: #6366f1;
+  
+  /* Status Colors */
   --memo-error: #ef4444;
+  --memo-error-light: #fecaca;
   --memo-success: #10b981;
+  --memo-success-light: #bbf7d0;
   --memo-warning: #f59e0b;
+  --memo-warning-light: #fed7aa;
   --memo-info: #3b82f6;
-  --memo-unread-bg: #f0f9ff;
-  --memo-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --memo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --memo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --memo-radius-sm: 0.25rem;
-  --memo-radius-md: 0.375rem;
-  --memo-radius-lg: 0.5rem;
-  --memo-transition: all 0.2s ease-in-out;
-  --memo-drawer-width: 60%;
-  --memo-drawer-bg: var(--memo-surface);
-  --memo-drawer-header-bg: var(--memo-surface);
-  --memo-drawer-shadow: var(--memo-shadow-lg);
-  --memo-drawer-border: 1px solid var(--memo-border);
-  --memo-drawer-header-height: 60px;
-  --memo-action-btn-gap: 0.5rem;
+  --memo-info-light: #bfdbfe;
+  --memo-unread-bg: rgba(99, 102, 241, 0.05);
+  
+  /* Modern Shadows */
+  --memo-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --memo-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --memo-shadow-md: 0 8px 25px rgba(0, 0, 0, 0.12);
+  --memo-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.15);
+  --memo-shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+  --memo-shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  --memo-shadow-glow-hover: 0 0 30px rgba(99, 102, 241, 0.4);
+  
+  /* Border Radius */
+  --memo-radius-xs: 0.125rem;
+  --memo-radius-sm: 0.375rem;
+  --memo-radius-md: 0.5rem;
+  --memo-radius-lg: 0.75rem;
+  --memo-radius-xl: 1rem;
+  --memo-radius-2xl: 1.5rem;
+  --memo-radius-full: 9999px;
+  
+  /* Transitions & Animations */
+  --memo-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --memo-transition-fast: all 0.15s ease-out;
+  --memo-transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --memo-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Spacing */
+  --memo-space-xs: 0.25rem;
+  --memo-space-sm: 0.5rem;
+  --memo-space-md: 1rem;
+  --memo-space-lg: 1.5rem;
+  --memo-space-xl: 2rem;
+  --memo-space-2xl: 3rem;
+  
+  /* Drawer */
+  --memo-drawer-width: 65%;
+  --memo-drawer-bg: var(--memo-surface-glass);
+  --memo-drawer-header-bg: rgba(255, 255, 255, 0.9);
+  --memo-drawer-shadow: var(--memo-shadow-xl);
+  --memo-drawer-border: 1px solid var(--memo-border-light);
+  --memo-drawer-header-height: 70px;
+  --memo-action-btn-gap: 0.75rem;
+  
+  /* Backdrop Blur */
+  --memo-blur-sm: blur(8px);
+  --memo-blur-md: blur(12px);
+  --memo-blur-lg: blur(16px);
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.5;
+  color: var(--memo-text-primary);
+  background: var(--memo-background);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: var(--memo-radius-full);
+  transition: var(--memo-transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+/* Glass Morphism Utility Classes */
+.glass {
+  background: var(--memo-surface-glass);
+  backdrop-filter: var(--memo-blur-md);
+  border: 1px solid var(--memo-border-light);
+}
+
+.glass-strong {
+  background: var(--memo-surface);
+  backdrop-filter: var(--memo-blur-lg);
+  border: 1px solid var(--memo-border);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: var(--memo-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Modern Button Styles */
+.btn-modern {
+  position: relative;
+  background: var(--memo-gradient-primary);
+  color: var(--memo-text-inverse);
+  border: none;
+  border-radius: var(--memo-radius-lg);
+  padding: var(--memo-space-sm) var(--memo-space-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--memo-transition);
+  box-shadow: var(--memo-shadow-sm);
+  overflow: hidden;
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--memo-shadow-glow-hover);
+}
+
+.btn-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: var(--memo-transition-slow);
+}
+
+.btn-modern:hover::before {
+  left: 100%;
+}
+
+/* Floating Elements */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Pulse Animation */
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Slide Up Animation */
+.slide-up {
+  animation: slideUp 0.5s var(--memo-bounce) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale In Animation */
+.scale-in {
+  animation: scaleIn 0.3s var(--memo-bounce) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Shimmer Loading Effect */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Focus Styles */
+.focus-visible:focus-visible,
+*:focus-visible {
+  outline: 2px solid var(--memo-primary-color);
+  outline-offset: 2px;
+  border-radius: var(--memo-radius-sm);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --memo-border: #000000;
+    --memo-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --memo-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --memo-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .floating,
+  .pulse {
+    animation: none !important;
+  }
 }

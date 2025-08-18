@@ -5,14 +5,18 @@ import { createPinia } from 'pinia'
 
 
 const app = createApp(App);
-import "./assets/main.css"
-import VueMemo from '.';
 const pinia = createPinia()
 
-app.use(VueMemo, {
-    // The token should be passed dynamically from the host application
-    // token: "YOUR_AUTH_TOKEN"
-});
-
 app.use(pinia);
+
+import "./assets/main.css"
+import VueMemo from '.';
+
+app.use(VueMemo, {
+    token: "demo-token",
+    baseUrl: "https://jsonplaceholder.typicode.com",
+    colors: {
+        primary: '#3b82f6'
+    }
+});
 app.mount('#memo-app-vm')
