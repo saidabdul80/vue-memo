@@ -2,7 +2,6 @@
   <div class="memo-list-container">
     <div class="memo-list-header">
       <TopMenus />
-      <GlobalSearch />
     </div>
     
     <div class="memo-list-content">
@@ -28,7 +27,7 @@
       
       <div v-if="global.memos.length === 0 && !memoLoading" class="empty-memo-list">
         <div class="empty-icon-container">
-          <i class="pi pi-folder-open empty-icon"></i>
+          <PhFolderOpen :size="72" class="empty-icon" />
           <div class="pulse-ring"></div>
         </div>
         <h3 class="empty-title">No Memos Found</h3>
@@ -66,7 +65,7 @@
             
             <div class="memo-actions">
               <button @click="toggle($event, memo)" class="action-btn">
-                <i class="pi pi-ellipsis-v"></i>
+                <PhDotsThreeVertical :size="16" />
               </button>
             </div>
           </div>
@@ -81,7 +80,7 @@
         <Pagination />
         <button @click="global.compose()" class="compose-btn">
           <div class="btn-gradient"></div>
-          <i class="pi pi-plus vm-mr-2"></i>
+          <PhPlus :size="16" class="vm-mr-2" />
           <span>New Memo</span>
         </button>
       </div>
@@ -90,11 +89,11 @@
     <div v-if="showMenu" class="overlay-menu glass-menu" :style="menuStyle">
       <ul>
         <li @click="editMemo" class="menu-item">
-          <i class="pi pi-pencil vm-mr-3"></i> 
+          <PhPencil :size="16" class="vm-mr-3" /> 
           <span>Edit</span>
         </li>
         <li @click="deleteMemo" class="menu-item danger">
-          <i class="pi pi-trash vm-mr-3"></i> 
+          <PhTrash :size="16" class="vm-mr-3" /> 
           <span>Delete</span>
         </li>
       </ul>
@@ -104,17 +103,21 @@
 
 <script>
 import { useGlobalsStore } from "@/stores/globals";
-import GlobalSearch from "./GlobalSearch.vue";
 import TopMenus from "./TopMenus.vue";
 import MemoLoader from "./MemoLoader.vue";
 import Pagination from "./Pagination.vue";
+import { PhFolderOpen, PhDotsThreeVertical, PhPlus, PhPencil, PhTrash } from '@phosphor-icons/vue';
 
 export default {
   components: {
-    GlobalSearch,
     TopMenus,
     MemoLoader,
     Pagination,
+    PhFolderOpen,
+    PhDotsThreeVertical,
+    PhPlus,
+    PhPencil,
+    PhTrash,
   },
   data() {
     return {

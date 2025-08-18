@@ -37,8 +37,8 @@
                 </div>
                 <div v-else class="comment-body" v-html="comment.comment"></div>
                 <div class="comment-owner-actions" v-if="global.user.id === comment.approver_id">
-                  <button @click="editComment(comment)" class="btn-icon"><i class="pi pi-pencil"></i></button>
-                  <button @click="deleteComment(comment.id)" class="btn-icon btn-danger"><i class="pi pi-trash"></i></button>
+                  <button @click="editComment(comment)" class="btn-icon"><PhPencil :size="14" /></button>
+                  <button @click="deleteComment(comment.id)" class="btn-icon btn-danger"><PhTrash :size="14" /></button>
                 </div>
               </div>
             </div>
@@ -95,7 +95,7 @@
       <div class="drawer-header">
         <h3 class="drawer-title">Add Comment</h3>
         <button @click="global.make_comment = false" class="close-button">
-          <i class="pi pi-times"></i>
+          <PhX :size="16" />
         </button>
       </div>
       <div class="drawer-content">
@@ -112,10 +112,14 @@
 import { useClient } from "@/stores/client";
 import { useGlobalsStore } from "@/stores/globals";
 import MemoEditor from "./MemoEditor.vue";
+import { PhPencil, PhTrash, PhX } from '@phosphor-icons/vue';
 
 export default {
   components: {
     MemoEditor,
+    PhPencil,
+    PhTrash,
+    PhX,
   },
   data() {
     return {

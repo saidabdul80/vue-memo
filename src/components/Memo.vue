@@ -12,7 +12,7 @@
           <span v-else>Memo Details</span>
         </h3>
         <button @click="store.drawer = false" class="close-button">
-          <i class="pi pi-times"></i>
+          <PhX :size="16" />
         </button>
       </div>
       <div class="drawer-content">
@@ -55,12 +55,14 @@ import Content from "./Content.vue";
 import List from "./List.vue";
 import NotificationRoot from "./notifications/NotificationRoot.vue";
 import { useClient } from "@/stores/client";
+import { PhX } from '@phosphor-icons/vue';
 
 export default {
   components: {
     Content,
     List,
     NotificationRoot,
+    PhX,
   },
   data() {
     return {
