@@ -7,7 +7,7 @@
         @click="selectMenu(index)" 
         :class="['tab-button', { 'active': activeIndex === index }]"
       >
-        <i :class="tab.icon" class="tab-icon"></i>
+        <component :is="tab.icon" :size="18" class="tab-icon" />
         <span class="tab-label">{{ tab.label }}</span>
         <div v-if="activeIndex === index" class="tab-indicator"></div>
       </button>
@@ -17,25 +17,31 @@
 
 <script>
 import { useGlobalsStore } from "@/stores/globals";
+import { PhFolder, PhTray, PhPaperPlaneRight } from '@phosphor-icons/vue';
 
 export default {
+  components: {
+    PhFolder,
+    PhTray,
+    PhPaperPlaneRight,
+  },
   props: {
     menus: {
       type: Array,
       default: () => [
         {
           label: "All",
-          icon: "pi pi-folder",
+          icon: "PhFolder",
           name: "category",
         },
         {
           label: "INBOX",
-          icon: "pi pi-inbox",
+          icon: "PhTray",
           name: "category",
         },
         {
           label: "SENT",
-          icon: "pi pi-send",
+          icon: "PhPaperPlaneRight",
           name: "category",
         },
       ],

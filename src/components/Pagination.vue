@@ -5,10 +5,10 @@
     </span>
     <div class="vm-flex vm-gap-2">
       <button @click="changePage(links.prev)" :disabled="!links.prev" class="btn-icon">
-        <i class="pi pi-chevron-left"></i>
+        <PhCaretLeft :size="16" />
       </button>
       <button @click="changePage(links.next)" :disabled="!links.next" class="btn-icon">
-        <i class="pi pi-chevron-right"></i>
+        <PhCaretRight :size="16" />
       </button>
     </div>
   </div>
@@ -16,8 +16,13 @@
 
 <script>
 import { useGlobalsStore } from "@/stores/globals";
+import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 
 export default {
+  components: {
+    PhCaretLeft,
+    PhCaretRight,
+  },
   props: {
     meta: {
       type: Object,

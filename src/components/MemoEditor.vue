@@ -22,23 +22,23 @@
             <div class="editor-toolbar-actions vm-p-3 vm-border-b vm-border-white/20 vm-bg-white/5">
                 <div class="vm-flex vm-gap-1 vm-flex-wrap">
                     <button @click="execCommand('bold')" class="toolbar-btn" :class="{ 'active': isActive('bold') }">
-                        <i class="pi pi-bold"></i>
+                        <PhTextB :size="16" />
                     </button>
                     <button @click="execCommand('italic')" class="toolbar-btn" :class="{ 'active': isActive('italic') }">
-                        <i class="pi pi-italic"></i>
+                        <PhTextItalic :size="16" />
                     </button>
                     <button @click="execCommand('underline')" class="toolbar-btn" :class="{ 'active': isActive('underline') }">
-                        <i class="pi pi-underline"></i>
+                        <PhTextUnderline :size="16" />
                     </button>
                     <div class="vm-w-px vm-h-6 vm-bg-white/20 vm-mx-1"></div>
                     <button @click="execCommand('justifyLeft')" class="toolbar-btn">
-                        <i class="pi pi-align-left"></i>
+                        <PhTextAlignLeft :size="16" />
                     </button>
                     <button @click="execCommand('justifyCenter')" class="toolbar-btn">
-                        <i class="pi pi-align-center"></i>
+                        <PhTextAlignCenter :size="16" />
                     </button>
                     <button @click="execCommand('justifyRight')" class="toolbar-btn">
-                        <i class="pi pi-align-right"></i>
+                        <PhTextAlignRight :size="16" />
                     </button>
                 </div>
             </div>
@@ -59,8 +59,17 @@
   
   <script>
   import { useGlobalsStore } from "@/stores/globals";
+  import { PhTextB, PhTextItalic, PhTextUnderline, PhTextAlignLeft, PhTextAlignCenter, PhTextAlignRight } from '@phosphor-icons/vue';
   
   export default {
+    components: {
+      PhTextB,
+      PhTextItalic,
+      PhTextUnderline,
+      PhTextAlignLeft,
+      PhTextAlignCenter,
+      PhTextAlignRight,
+    },
     props: {
         modelValue: { 
             type: String,

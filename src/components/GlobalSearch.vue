@@ -2,7 +2,7 @@
   <div class="global-search-container">
     <div class="search-input-wrapper" :class="{ 'focused': isFocused }">
       <div class="search-icon-container">
-        <i class="pi pi-search search-icon"></i>
+        <PhMagnifyingGlass :size="16" class="search-icon" />
       </div>
       <input 
         type="text" 
@@ -18,7 +18,7 @@
         @click="clearSearch"
         aria-label="Clear search"
       >
-        <i class="pi pi-times clear-icon"></i>
+        <PhX :size="14" class="clear-icon" />
       </button>
     </div>
   </div>
@@ -26,8 +26,13 @@
 
 <script>
 import { useGlobalsStore } from '@/stores/globals';
+import { PhMagnifyingGlass, PhX } from '@phosphor-icons/vue';
 
 export default {
+  components: {
+    PhMagnifyingGlass,
+    PhX
+  },
   data() {
     return {
       global: useGlobalsStore(),
