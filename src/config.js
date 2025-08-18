@@ -1,15 +1,11 @@
-
-
 let config = {
-  baseUrl:'http://localhost:8000/api',
-  colors: {
-    primary: "#006033",
-  },
+  baseUrl: 'http://localhost:8000/api',
+  colors: {},
   token: "",
-  height:'80vh',
+  height: '80vh',
   primevue: {},
   getMembersRoute: "/memo/members",
-  getBootRoute:"/memo/boot",
+  getBootRoute: "/memo/boot",
   getDepartmentsRoute: "/memo/departments",
   getStatusesRoute: "/memo/statuses",
   getTypesRoute: "/memo/types",
@@ -17,13 +13,16 @@ let config = {
   memosRoute: "/memo",
   approveMemoRoute: "/memo/approve",
   rejectMemoRoute: "/memo/reject",
-  makeCommentRoute:"/memo/make_comment"
+  makeCommentRoute: "/memo/make_comment"
 };
-
-
 
 export const setConfig = (options) => {
   config = { ...config, ...options };
+  if (!options.colors) {
+    config.colors = {
+      primary: "#006033",
+    };
+  }
 };
 
 export const getConfig = () => config;

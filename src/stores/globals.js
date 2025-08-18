@@ -114,6 +114,7 @@ export const useGlobalsStore = defineStore('memo-globals', {
       const msg = 'error';
     },
     setDepartments(d){
+      console.log(d, 'departments')
       this.departments = d
     },
     toCurrency(amount, symbol = true, shorten = true) {
@@ -214,7 +215,7 @@ export const useGlobalsStore = defineStore('memo-globals', {
       return res;
     },
     async boot(){
-
+      console.log(this.config.getBootRoute)
       const m = await useClient().http({ method: 'get', path:this.config.getBootRoute});
       if(m){
         this.user = m.user

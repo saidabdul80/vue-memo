@@ -1,31 +1,42 @@
 <template>
-  <div class="vm-w-full vm-items-center vm-flex vm-ms-2">
-    <div class="w-[5%] text-center vm-me-2">
-    <Skeleton shape="rectangle" size="20px" />
+  <div class="memo-loader-container">
+    <div class="checkbox-skeleton"></div>
+    <div class="content-skeleton">
+      <div class="title-skeleton"></div>
+      <div class="text-skeleton"></div>
     </div>
-    <div class=" vm-mb-2 vm-w-[95%]">
-      <!-- Title Skeleton -->
-      <Skeleton shape="rectangle" width="40%" height="10px" class="vm-mb-1" />
-      <Skeleton shape="rectangle" width="99%" height="30px" />
-    </div>
-    <div class="vm-flex vm-flex-col vm-justify-center vm-gap-1">
-        <Skeleton shape="circle" size="5px" />
-        <Skeleton shape="circle" size="5px" />
-        <Skeleton shape="circle" size="5px" />
+    <div class="dots-skeleton">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
   </div>
 </template>
 
 <script>
-import Skeleton from 'primevue/skeleton';
-
-    export default {
-        components: {
-            Skeleton,
-        },    
-    }
+export default {};
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.memo-loader-container {
+  @apply vm-flex vm-items-center vm-w-full vm-p-2;
+}
+.checkbox-skeleton {
+  @apply vm-w-5 vm-h-5 vm-bg-gray-300 vm-rounded vm-mr-3;
+}
+.content-skeleton {
+  @apply vm-flex-grow;
+}
+.title-skeleton {
+  @apply vm-w-2/5 vm-h-3 vm-bg-gray-300 vm-rounded vm-mb-2;
+}
+.text-skeleton {
+  @apply vm-w-full vm-h-8 vm-bg-gray-300 vm-rounded;
+}
+.dots-skeleton {
+  @apply vm-flex vm-flex-col vm-gap-1 vm-ml-3;
+}
+.dot {
+  @apply vm-w-1 vm-h-1 vm-bg-gray-300 vm-rounded-full;
+}
 </style>

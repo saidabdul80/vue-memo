@@ -1,47 +1,32 @@
 <template>
   <div class="pagination-container">
-    <span class="pagination-info">
-      Showing {{ meta?.from }} - {{ meta?.to }} of {{ meta?.total }}
+    <span class="vm-text-sm vm-text-text-secondary">
+      {{ meta.from }} - {{ meta.to }} of {{ meta.total }}
     </span>
-    
-    <div class="pagination-controls">
-      <Button
-        outlined
-        :disabled="!links?.prev"
-        @click="changePage(links?.prev)"
-        class="pagination-btn"
-        aria-label="Previous page"
-      >
-        <PhCaretLeft class="btn-icon" />
-      </Button>
-      
-      <Button
-        outlined
-        :disabled="!links?.next"
-        @click="changePage(links?.next)"
-        class="pagination-btn"
-        aria-label="Next page"
-      >
-        <PhCaretRight class="btn-icon" />
-      </Button>
+    <div class="vm-flex vm-gap-2">
+      <button @click="changePage(links.prev)" :disabled="!links.prev" class="btn-icon">
+        <i class="pi pi-chevron-left"></i>
+      </button>
+      <button @click="changePage(links.next)" :disabled="!links.next" class="btn-icon">
+        <i class="pi pi-chevron-right"></i>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { useGlobalsStore } from "@/stores/globals";
-import { PhCaretLeft, PhCaretRight } from "@phosphor-icons/vue";
-import Button from "primevue/button";
 
 export default {
-  components: {
-    Button,
-    PhCaretRight,
-    PhCaretLeft,
-  },
   props: {
-    meta: Object,
-    links: Object,
+    meta: {
+      type: Object,
+      default: () => ({}),
+    },
+    links: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -50,7 +35,9 @@ export default {
   },
   methods: {
     changePage(path) {
-      this.global.fetchMemos(path, this.global.filters, true);
+      if (path) {
+        this.global.fetchMemos(path, this.global.filters, true);
+      }
     },
   },
 };
@@ -58,47 +45,9 @@ export default {
 
 <style scoped>
 .pagination-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  @apply vm-flex vm-justify-between vm-items-center vm-p-2;
 }
-
-.pagination-info {
-  font-size: 0.875rem;
-  color: var(--memo-text-secondary);
-}
-
-.pagination-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.pagination-btn {
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--memo-radius-sm);
-  border-color: var(--memo-border);
-  color: var(--memo-text-secondary);
-  transition: var(--memo-transition);
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background-color: var(--memo-primary-color);
-  border-color: var(--memo-primary-color);
-  color: white;
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .btn-icon {
-  font-size: 1rem;
+  @apply vm-p-2 vm-rounded-full hover:vm-bg-background disabled:vm-opacity-50;
 }
 </style>

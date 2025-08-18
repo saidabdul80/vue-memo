@@ -4,97 +4,47 @@
       <List />
     </div>
     
-    <Drawer
-      v-model:visible="store.drawer"
-      :position="store.isMdUp ? 'right' : 'bottom'"
-      @hide="store.content_to_show = 'viewer'"
-      :class="['memo-drawer', { 'desktop-drawer': store.isMdUp }]"
-    >
-      <template #header>
-        <div class="drawer-header">
-          <Transition name="fade" mode="out-in">
-            <div v-if="store.content_to_show == 'editor'" class="editor-actions">
-              <h3 class="drawer-title">
-                {{ store.memo?.id ? 'Edit Memo' : 'New Memo' }}
-              </h3>
-              <ButtonGroup class="action-buttons">
-                <Button
-                  :loading="buttonLoading.includes('SUBMITTED')"
-                  @click="sendMemo('SUBMITTED')"
-                  :label="store.memo?.id == null ? 'Send Memo' : 'Update Memo'"
-                  :severity="store.memo?.id == null ? 'primary' : 'warning'"
-                  class="action-btn"
-                />
-                <Button
-                  v-if="store.memo?.id == null"
-                  :loading="buttonLoading.includes('DRAFT')"
-                  @click="sendMemo('DRAFT')"
-                  label="Save as Draft"
-                  severity="secondary"
-                  class="action-btn"
-                />
-              </ButtonGroup>
-            </div>
-            
-            <div v-else class="viewer-actions">
-              <h3 class="drawer-title">Memo Details</h3>
-              <ButtonGroup class="action-buttons">
-                <Button
-                  v-if="!store.isMyMemo(store.memo)"
-                  severity="secondary"
-                  @click="store.make_comment = true; store.comment = null"
-                  class="action-btn"
-                >
-                  <template #icon>
-                    <PhPencil />
-                  </template>
-                  <span>Add Comment</span>
-                </Button>
-                <Button
-                  v-else
-                  severity="secondary"
-                  @click="store.content_to_show = 'editor'"
-                  class="action-btn"
-                >
-                  <template #icon>
-                    <PhPencil />
-                  </template>
-                  <span>Edit Memo</span>
-                </Button>
-                <Button
-                  v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'"
-                  :disabled="approver.status == 'APPROVED'"
-                  :loading="buttonLoading.includes('APPROVED')"
-                  @click="sendMemo('APPROVED')"
-                  class="action-btn"
-                  severity="success"
-                >
-                  <template #icon>
-                    <PhCheckCircle />
-                  </template>
-                  <span>Approve</span>
-                </Button>
-                <Button
-                  v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'"
-                  :disabled="approver.status == 'REJECTED'"
-                  :loading="buttonLoading.includes('REJECTED')"
-                  @click="sendMemo('REJECTED')"
-                  class="action-btn"
-                  severity="danger"
-                >
-                  <template #icon>
-                    <PhXCircle />
-                  </template>
-                  <span>Reject</span>
-                </Button>
-              </ButtonGroup>
-            </div>
-          </Transition>
-        </div>
-      </template>
-      
-      <Content />
-    </Drawer>
+    <div v-if="store.drawer" class="memo-drawer-overlay" @click="store.drawer = false"></div>
+    <div :class="['memo-drawer', { 'is-open': store.drawer, 'is-desktop': store.isMdUp }]">
+      <div class="drawer-header">
+        <h3 class="drawer-title">
+          <span v-if="store.content_to_show === 'editor'">{{ store.memo?.id ? 'Edit Memo' : 'New Memo' }}</span>
+          <span v-else>Memo Details</span>
+        </h3>
+        <button @click="store.drawer = false" class="close-button">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      <div class="drawer-content">
+        <Content />
+      </div>
+      <div class="drawer-footer">
+        <Transition name="fade" mode="out-in">
+          <div v-if="store.content_to_show === 'editor'" class="action-buttons">
+            <button :disabled="buttonLoading.includes('SUBMITTED')" @click="sendMemo('SUBMITTED')" class="btn btn-primary">
+              {{ store.memo?.id == null ? 'Send Memo' : 'Update Memo' }}
+            </button>
+            <button v-if="store.memo?.id == null" :disabled="buttonLoading.includes('DRAFT')" @click="sendMemo('DRAFT')" class="btn btn-secondary">
+              Save as Draft
+            </button>
+          </div>
+          <div v-else class="action-buttons">
+            <button v-if="!store.isMyMemo(store.memo)" @click="store.make_comment = true; store.comment = null" class="btn btn-secondary">
+              Add Comment
+            </button>
+            <button v-else @click="store.content_to_show = 'editor'" class="btn btn-secondary">
+              Edit Memo
+            </button>
+            <button v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'" :disabled="approver.status == 'APPROVED'" @click="sendMemo('APPROVED')" class="btn btn-success">
+              Approve
+            </button>
+            <button v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'" :disabled="approver.status == 'REJECTED'" @click="sendMemo('REJECTED')" class="btn btn-danger">
+              Reject
+            </button>
+          </div>
+        </Transition>
+      </div>
+    </div>
     
     <NotificationRoot />
   </div>
@@ -104,24 +54,14 @@
 import { useGlobalsStore } from "@/stores/globals";
 import Content from "./Content.vue";
 import List from "./List.vue";
-import Drawer from "primevue/drawer";
-import Button from "primevue/button";
-import { PhPencil, PhCheckCircle, PhXCircle } from "@phosphor-icons/vue";
-import ButtonGroup from "primevue/buttongroup";
 import NotificationRoot from "./notifications/NotificationRoot.vue";
 import { useClient } from "@/stores/client";
 
 export default {
   components: {
     Content,
-    Drawer,
     List,
-    Button,
-    ButtonGroup,
     NotificationRoot,
-    PhPencil,
-    PhCheckCircle,
-    PhXCircle,
   },
   data() {
     return {
@@ -131,7 +71,6 @@ export default {
   },
   created() {
     this.store.config = this.$memoglobals;
-    console.log(this.store.config);
     this.updateScreenSize();
     window.addEventListener("resize", this.updateScreenSize);
     this.store.boot();
@@ -159,7 +98,7 @@ export default {
             approver.approver_type === this.store.bootload.user.user_type
         );
       } else {
-        return [];
+        return {};
       }
     },
   },
@@ -204,7 +143,6 @@ export default {
     },
     updateScreenSize() {
       this.store.isMdUp = window.innerWidth >= 961;
-      this.store.currentSize = window.innerWidth;
     },
   },
   beforeDestroy() {
@@ -213,130 +151,116 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
+:root {
+  --memo-primary-color: #3b82f6;
+  --memo-primary-hover: #a5c1ff;
+  --memo-secondary-color: #64748b;
+  --memo-background: #f8fafc;
+  --memo-surface: #ffffff;
+  --memo-border: #e2e8f0;
+  --memo-text-primary: #1e293b;
+  --memo-text-secondary: #64748b;
+  --memo-error: #ef4444;
+  --memo-success: #10b981;
+  --memo-warning: #f59e0b;
+  --memo-info: #3b82f6;
+  --memo-unread-bg: #f0f9ff;
+  --memo-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --memo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --memo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --memo-radius-sm: 0.25rem;
+  --memo-radius-md: 0.375rem;
+  --memo-radius-lg: 0.5rem;
+  --memo-transition: all 0.2s ease-in-out;
+  --memo-drawer-width: 60%;
+  --memo-drawer-bg: var(--memo-surface);
+  --memo-drawer-header-bg: var(--memo-surface);
+  --memo-drawer-shadow: var(--memo-shadow-lg);
+  --memo-drawer-border: 1px solid var(--memo-border);
+  --memo-drawer-header-height: 60px;
+  --memo-action-btn-gap: 0.5rem;
+  --memo-height: 80vh;
+}
+
 .memo-app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
+  @apply vm-flex vm-h-screen vm-overflow-hidden vm-bg-background;
 }
 
 .list-container {
-  flex: 1;
+  @apply vm-flex-1 vm-overflow-y-auto vm-p-4;
+}
+
+.memo-drawer-overlay {
+  @apply vm-fixed vm-inset-0 vm-bg-black vm-bg-opacity-50 vm-z-40;
 }
 
 .memo-drawer {
-  background-color: var(--memo-drawer-bg);
-  box-shadow: var(--memo-drawer-shadow);
-  border: var(--memo-drawer-border);
-  transition: var(--memo-transition);
+  @apply vm-fixed vm-top-0 vm-right-0 vm-h-full vm-bg-surface vm-shadow-lg vm-z-50 vm-transform vm-translate-x-full vm-transition-transform vm-duration-300 vm-ease-in-out;
+  width: var(--memo-drawer-width, 80%);
 }
 
-.memo-drawer.desktop-drawer {
-  width: var(--memo-drawer-width);
-  height: 100%;
+.memo-drawer.is-open {
+  @apply vm-translate-x-0;
+}
+
+.memo-drawer.is-desktop {
+  width: var(--memo-drawer-width, 60%);
 }
 
 .drawer-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: var(--memo-drawer-header-bg);
-  border-bottom: var(--memo-drawer-border);
+  @apply vm-flex vm-items-center vm-justify-between vm-p-4 vm-border-b;
 }
 
 .drawer-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--memo-text-primary);
+  @apply vm-text-lg vm-font-semibold vm-text-text-primary;
 }
 
-.editor-actions,
-.viewer-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.close-button {
+  @apply vm-text-text-secondary hover:vm-text-text-primary;
+}
+
+.drawer-content {
+  @apply vm-p-4 vm-overflow-y-auto;
+  height: calc(100% - 120px);
+}
+
+.drawer-footer {
+  @apply vm-p-4 vm-border-t;
 }
 
 .action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--memo-action-btn-gap);
+  @apply vm-flex vm-gap-2;
 }
 
-.action-btn {
-  flex: 1 1 auto;
-  min-width: 120px;
-  white-space: nowrap;
+.btn {
+  @apply vm-px-4 vm-py-2 vm-rounded-md vm-font-semibold vm-transition-colors;
 }
 
-/* Animations */
+.btn-primary {
+  @apply vm-bg-primary vm-text-white hover:vm-bg-primary-hover;
+}
+
+.btn-secondary {
+  @apply vm-bg-secondary vm-text-white hover:vm-bg-opacity-80;
+}
+
+.btn-success {
+  @apply vm-bg-success vm-text-white hover:vm-bg-opacity-80;
+}
+
+.btn-danger {
+  @apply vm-bg-error vm-text-white hover:vm-bg-opacity-80;
+}
+
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  @apply vm-transition-opacity vm-duration-300;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-up-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.slide-up-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 960px) {
-  :root {
-    --memo-drawer-width: 100%;
-    --memo-drawer-header-height: auto;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .action-btn {
-    width: 100%;
-  }
+  @apply vm-opacity-0;
 }
 </style>
-<!-- <style>
-:root {
-  --vm-prime-button-primary-background: v-bind(store.config.colors.primary);
-}
-.menu-active {
-  color: var(--vm-prime-button-primary-background);
-  border-bottom: 3px solid var(--vm-prime-button-primary-background);
-  background: #0001;
-  border-radius: 5px 5px 0 0;
-  height: 100% !important;
-  transition: all 0.5s !important;
-}
-.slide-up-enter-active,
-.slide-up-leave-active {
-  transition: all 0.25s ease-out;
-}
-.slide-up-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.slide-up-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-</style> -->

@@ -19,11 +19,11 @@ export default defineConfig({
       fileName: (format) => `vue-memo.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue', 'primevue', 'pinia','quill','tailwindcss'],
+      external: ['vue', 'primeicons', 'pinia','quill','tailwindcss'],
       output: {
         globals: {
           vue: 'Vue',
-          primevue: 'PrimeVue',
+          primeicons:'primeicons',
           pinia: 'pinia',
           quill:'quill',
           tailwindcss:'tailwindcss'
@@ -36,4 +36,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   }
+  
 });

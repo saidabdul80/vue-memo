@@ -18,7 +18,7 @@
                 <div  class="vm-text-xs vm-ms-2">
                     <p class="vm-m-0">#{{ global.memo.type }}</p>
                     <span>{{ global.memo?.title }}</span>
-                    <span class="vm-ms-2"> ({{ global.memo?.owner.full_name }})</span>
+                    <span class="vm-ms-2"> ({{ global.memo?.owner?.full_name }})</span>
                 </div>
             </div>
             <span class="ql-formats">

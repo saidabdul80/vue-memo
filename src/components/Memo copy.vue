@@ -7,25 +7,25 @@
     </div>
     <div class="md:!vm-hidden vm-block">
       <Drawer
-        v-model:visible="store.drawer"
-        :position="store.isMdUp ? 'right' : 'bottom'"
-        @hide="store.content_to_show = 'viewer'"
-        :class="store.isMdUp ? '!vm-w-[60%] !vm-h-full' : ''"
+        v-model:visible="store?.drawer"
+        :position="store?.isMdUp ? 'right' : 'bottom'"
+        @hide="store?.content_to_show = 'viewer'"
+        :class="store?.isMdUp ? '!vm-w-[60%] !vm-h-full' : ''"
         style="height: auto"
       >
         <template #header>
-          <div v-if="store.content_to_show == 'editor'" class="vm-mb-3 vm-mt-4">
+          <div v-if="store?.content_to_show == 'editor'" class="vm-mb-3 vm-mt-4">
             <ButtonGroup>
               <Button
                 size="small"
                 :loading="buttonLoading.includes('SUBMITTED')"
                 @click="sendMemo('SUBMITTED')"
-                :label="store.memo?.id == null ? 'Send Memo' : 'Update Memo'"
-                :severity="store.memo?.id == null ? 'primary' : 'warn'"
+                :label="store?.memo?.id == null ? 'Send Memo' : 'Update Memo'"
+                :severity="store?.memo?.id == null ? 'primary' : 'warn'"
               />
               <Button
                 size="small"
-                v-if="store.memo?.id == null"
+                v-if="store?.memo?.id == null"
                 :loading="buttonLoading.includes('DRAFT')"
                 @click="sendMemo('DRAFT')"
                 label="Save as Draft"
@@ -39,7 +39,7 @@
                 v-if="!store.isMyMemo(store.memo)"
                 size="small"
                 severity="secondary"
-                @click="store.make_comment = true; store.comment = null"
+                @click="store?.make_comment = true; store?.comment = null"
                 label="Make Comment">
                 <template #icon>
                   <PhPencil />
@@ -49,14 +49,14 @@
                 v-else
                 size="small"
                 severity="secondary"
-                @click="store.content_to_show = 'editor'"
+                @click="store?.content_to_show = 'editor'"
                 label="Update Memo">
                 <template #icon>
                   <PhPencil />
                 </template>
               </Button>
               <Button
-                v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'"
+                v-if="!store?.isMyMemo(store?.memo) && store?.memo?.type == 'REQUEST'"
                 :disabled="approver.status == 'APPROVED'"
                 size="small"
                 severity="primary"
@@ -69,7 +69,7 @@
             </template>
             </Button>
               <Button
-                v-if="!store.isMyMemo(store.memo) && store.memo.type == 'REQUEST'"
+                v-if="!store.isMyMemo(store?.memo) && store?.memo?.type == 'REQUEST'"
                 :disabled="approver.status == 'REJECTED'"
                 size="small"
                 severity="danger"
@@ -117,11 +117,12 @@ export default {
   },
   data() {
     return {
-      store: useGlobalsStore(),
+      store:{},
       buttonLoading: [],
     };
   },
   created() {
+    this.store = useGlobalsStore();
     this.store.config = this.$memoglobals;
     console.log(this.store.config);
     this.updateScreenSize();

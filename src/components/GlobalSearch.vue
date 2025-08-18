@@ -1,34 +1,39 @@
 <template>
-   <IconField class="vm-h-[38px] vm-text-center md:vm-w-[40%] vm-mx-auto">
-        <PhMagnifyingGlass class="vm-absolute vm-top-[30%] vm-left-3" />
-        <InputText v-model="global.filters.search" class="vm-h-[38px] vm-text-center md:vm-w-full vm-mx-auto" placeholder="Search" />
-        <PhXCircle v-if="global.filters.search" @click="global.filters.search = ''" class="vm-absolute vm-top-[30%] vm-right-3 vm-cursor-pointer" />
-    </IconField>
+  <div class="global-search-container">
+    <div class="search-input-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input type="text" v-model="global.filters.search" placeholder="Search Memos" class="search-input" />
+      <i v-if="global.filters.search" class="pi pi-times clear-icon" @click="global.filters.search = ''"></i>
+    </div>
+  </div>
 </template>
 
 <script>
 import { useGlobalsStore } from '@/stores/globals';
-import { PhMagnifyingGlass, PhXCircle } from '@phosphor-icons/vue';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
-import InputText from 'primevue/inputtext';
 
-    export default {
-        components: {
-            IconField,
-            InputIcon,
-            InputText,
-            PhMagnifyingGlass,
-            PhXCircle
-        },
-        data() {
-            return {
-                global: useGlobalsStore()
-            }
-        },
-    }
+export default {
+  data() {
+    return {
+      global: useGlobalsStore(),
+    };
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.global-search-container {
+  @apply vm-w-full vm-max-w-md vm-mx-auto;
+}
+.search-input-wrapper {
+  @apply vm-relative;
+}
+.search-icon {
+  @apply vm-absolute vm-left-3 vm-top-1/2 -vm-translate-y-1/2 vm-text-text-secondary;
+}
+.search-input {
+  @apply vm-w-full vm-pl-10 vm-pr-10 vm-py-2 vm-border vm-rounded-md vm-bg-background focus:vm-outline-none focus:vm-ring-2 focus:vm-ring-primary;
+}
+.clear-icon {
+  @apply vm-absolute vm-right-3 vm-top-1/2 -vm-translate-y-1/2 vm-text-text-secondary vm-cursor-pointer hover:vm-text-text-primary;
+}
 </style>
