@@ -2,7 +2,6 @@
   <div class="memo-list-container">
     <div class="memo-list-header">
       <TopMenus />
-      <GlobalSearch />
     </div>
     
     <div class="memo-list-content">
@@ -104,7 +103,6 @@
 
 <script>
 import { useGlobalsStore } from "@/stores/globals";
-import GlobalSearch from "./GlobalSearch.vue";
 import TopMenus from "./TopMenus.vue";
 import MemoLoader from "./MemoLoader.vue";
 import Pagination from "./Pagination.vue";
@@ -112,7 +110,6 @@ import { PhFolderOpen, PhDotsThreeVertical, PhPlus, PhPencil, PhTrash } from '@p
 
 export default {
   components: {
-    GlobalSearch,
     TopMenus,
     MemoLoader,
     Pagination,

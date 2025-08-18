@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
 .global-search-container {
-  @apply vm-w-full vm-max-w-lg vm-mx-auto vm-mt-4;
+  @apply vm-w-full;
 }
 
 .search-input-wrapper {
@@ -88,8 +88,8 @@ export default {
 }
 
 .search-input {
-  @apply vm-w-full vm-pl-12 vm-pr-12 vm-py-4 vm-bg-transparent;
-  @apply vm-text-text-primary vm-placeholder-text-secondary vm-text-base;
+  @apply vm-w-full vm-pl-12 vm-pr-12 vm-py-3 vm-bg-transparent;
+  @apply vm-text-text-primary vm-placeholder-text-secondary vm-text-sm;
   @apply vm-border-none vm-outline-none vm-rounded-2xl;
   @apply vm-transition-all vm-duration-300;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

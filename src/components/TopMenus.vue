@@ -1,16 +1,22 @@
 <template>
   <div class="top-menus-container">
-    <div class="modern-tabs">
-      <button 
-        v-for="(tab, index) in menus" 
-        :key="tab.label" 
-        @click="selectMenu(index)" 
-        :class="['tab-button', { 'active': activeIndex === index }]"
-      >
-        <component :is="tab.icon" :size="18" class="tab-icon" />
-        <span class="tab-label">{{ tab.label }}</span>
-        <div v-if="activeIndex === index" class="tab-indicator"></div>
-      </button>
+    <div class="top-menus-wrapper">
+      <div class="modern-tabs">
+        <button 
+          v-for="(tab, index) in menus" 
+          :key="tab.label" 
+          @click="selectMenu(index)" 
+          :class="['tab-button', { 'active': activeIndex === index }]"
+        >
+          <component :is="tab.icon" :size="18" class="tab-icon" />
+          <span class="tab-label">{{ tab.label }}</span>
+          <div v-if="activeIndex === index" class="tab-indicator"></div>
+        </button>
+      </div>
+      
+      <div class="search-section">
+        <GlobalSearch />
+      </div>
     </div>
   </div>
 </template>
@@ -18,12 +24,14 @@
 <script>
 import { useGlobalsStore } from "@/stores/globals";
 import { PhFolder, PhTray, PhPaperPlaneRight } from '@phosphor-icons/vue';
+import GlobalSearch from './GlobalSearch.vue';
 
 export default {
   components: {
     PhFolder,
     PhTray,
     PhPaperPlaneRight,
+    GlobalSearch,
   },
   props: {
     menus: {
@@ -70,12 +78,22 @@ export default {
   @apply vm-mb-6;
 }
 
+.top-menus-wrapper {
+  @apply vm-flex vm-items-center vm-justify-between vm-gap-6;
+}
+
 .modern-tabs {
-  @apply vm-flex vm-relative vm-p-1 vm-rounded-2xl;
+  @apply vm-flex vm-relative vm-p-1 vm-rounded-2xl vm-flex-shrink-0;
   background: var(--memo-glass-secondary);
   backdrop-filter: var(--memo-backdrop-blur);
   border: 1px solid var(--memo-glass-border);
   box-shadow: var(--memo-shadow-glass);
+}
+
+.search-section {
+  @apply vm-flex-shrink vm-min-w-0;
+  flex: 1;
+  max-width: 400px;
 }
 
 .tab-button {
@@ -141,6 +159,19 @@ export default {
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .top-menus-wrapper {
+    @apply vm-flex-col vm-gap-4;
+  }
+  
+  .modern-tabs {
+    @apply vm-w-full vm-justify-center;
+  }
+  
+  .search-section {
+    @apply vm-w-full;
+    max-width: none;
+  }
+  
   .tab-button {
     @apply vm-px-4 vm-py-2;
   }
@@ -148,9 +179,23 @@ export default {
   .tab-label {
     @apply vm-text-sm;
   }
+}
+
+@media (max-width: 480px) {
+  .top-menus-wrapper {
+    @apply vm-gap-3;
+  }
   
   .modern-tabs {
     @apply vm-gap-1;
+  }
+  
+  .tab-button {
+    @apply vm-px-3 vm-py-2;
+  }
+  
+  .tab-label {
+    @apply vm-text-xs;
   }
 }
 
