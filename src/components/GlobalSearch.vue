@@ -1,9 +1,25 @@
 <template>
   <div class="global-search-container">
-    <div class="search-input-wrapper">
-      <i class="pi pi-search search-icon"></i>
-      <input type="text" v-model="global.filters.search" placeholder="Search Memos" class="search-input" />
-      <i v-if="global.filters.search" class="pi pi-times clear-icon" @click="global.filters.search = ''"></i>
+    <div class="search-input-wrapper" :class="{ 'focused': isFocused }">
+      <div class="search-icon-container">
+        <i class="pi pi-search search-icon"></i>
+      </div>
+      <input 
+        type="text" 
+        v-model="global.filters.search" 
+        placeholder="Search your memos..." 
+        class="search-input"
+        @focus="isFocused = true"
+        @blur="isFocused = false"
+      />
+      <button 
+        v-if="global.filters.search" 
+        class="clear-button" 
+        @click="clearSearch"
+        aria-label="Clear search"
+      >
+        <i class="pi pi-times clear-icon"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -15,25 +31,101 @@ export default {
   data() {
     return {
       global: useGlobalsStore(),
+      isFocused: false,
     };
+  },
+  methods: {
+    clearSearch() {
+      this.global.filters.search = '';
+      this.$nextTick(() => {
+        this.$refs?.searchInput?.focus();
+      });
+    },
   },
 };
 </script>
 
 <style scoped>
 .global-search-container {
-  @apply vm-w-full vm-max-w-md vm-mx-auto;
+  @apply vm-w-full vm-max-w-lg vm-mx-auto vm-mt-4;
 }
+
 .search-input-wrapper {
-  @apply vm-relative;
+  @apply vm-relative vm-rounded-2xl vm-transition-all vm-duration-300;
+  background: var(--memo-glass-secondary);
+  backdrop-filter: var(--memo-backdrop-blur);
+  border: 1px solid var(--memo-glass-border);
+  box-shadow: var(--memo-shadow-glass);
 }
+
+.search-input-wrapper.focused {
+  @apply vm-scale-[1.02];
+  box-shadow: var(--memo-shadow-glow);
+  border-color: var(--memo-primary-color);
+}
+
+.search-input-wrapper:hover {
+  @apply vm-scale-[1.01];
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.search-icon-container {
+  @apply vm-absolute vm-left-4 vm-top-1/2 vm-transform -vm-translate-y-1/2;
+  @apply vm-transition-all vm-duration-300;
+}
+
+.search-input-wrapper.focused .search-icon-container {
+  @apply vm-text-primary vm-scale-110;
+}
+
 .search-icon {
-  @apply vm-absolute vm-left-3 vm-top-1/2 -vm-translate-y-1/2 vm-text-text-secondary;
+  @apply vm-text-text-secondary vm-transition-all vm-duration-300;
 }
+
 .search-input {
-  @apply vm-w-full vm-pl-10 vm-pr-10 vm-py-2 vm-border vm-rounded-md vm-bg-background focus:vm-outline-none focus:vm-ring-2 focus:vm-ring-primary;
+  @apply vm-w-full vm-pl-12 vm-pr-12 vm-py-4 vm-bg-transparent;
+  @apply vm-text-text-primary vm-placeholder-text-secondary vm-text-base;
+  @apply vm-border-none vm-outline-none vm-rounded-2xl;
+  @apply vm-transition-all vm-duration-300;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+.search-input::placeholder {
+  @apply vm-transition-all vm-duration-300;
+}
+
+.search-input:focus::placeholder {
+  @apply vm-opacity-70 vm-transform vm-translate-x-1;
+}
+
+.clear-button {
+  @apply vm-absolute vm-right-3 vm-top-1/2 vm-transform -vm-translate-y-1/2;
+  @apply vm-p-2 vm-rounded-xl vm-text-text-secondary vm-transition-all vm-duration-300;
+  @apply hover:vm-text-text-primary hover:vm-bg-white/10 hover:vm-scale-110;
+  @apply focus:vm-outline-none focus:vm-ring-2 focus:vm-ring-primary focus:vm-ring-opacity-50;
+}
+
 .clear-icon {
-  @apply vm-absolute vm-right-3 vm-top-1/2 -vm-translate-y-1/2 vm-text-text-secondary vm-cursor-pointer hover:vm-text-text-primary;
+  @apply vm-text-sm vm-transition-transform vm-duration-300;
+}
+
+.clear-button:hover .clear-icon {
+  @apply vm-transform vm-rotate-90;
+}
+
+/* Loading state animation */
+.search-input-wrapper.loading {
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .search-input-wrapper {
+    @apply vm-mx-2;
+  }
+  
+  .search-input {
+    @apply vm-py-3 vm-text-sm;
+  }
 }
 </style>
